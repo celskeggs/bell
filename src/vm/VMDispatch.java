@@ -32,20 +32,20 @@ package vm;
  */
 
 public class VMDispatch {
-	
+
 	static final int FLAG_INTERFACE = 0x1;
 
 	static final int STRING_TABLE_POINTER_OFFSET = 8;
 	static final int STRING_TABLE_LENGTH_OFFSET = 12;
 	static final int CLASS_TABLE_POINTER_OFFSET = 16;
 	static final int CLASS_TABLE_LENGTH_OFFSET = 20;
-	
+
 	public static Class getClassByID(int id) {
 		return VMAccess.getVMClassByID(id).getRealClass();
 	}
 
 	private static String[] globalStrings;
-	
+
 	public static String getStringByID(int id) {
 		if (globalStrings == null) {
 			globalStrings = new String[VMNatives.getCodeInt(STRING_TABLE_LENGTH_OFFSET)];
@@ -55,16 +55,16 @@ public class VMDispatch {
 		int sptr = VMNatives.getCodeInt(VMNatives.getCodeInt(STRING_TABLE_POINTER_OFFSET) + 4 * id);
 		byte[] bytes = new byte[VMNatives.getCodeInt(sptr)];
 		sptr += 4;
-		for (int i=0; i<bytes.length; i++) {
+		for (int i = 0; i < bytes.length; i++) {
 			bytes[i] = VMNatives.getCodeByte(sptr + i);
 		}
 		return globalStrings[id] = new String(bytes);
 	}
 
 	public static int resolveVirtual(int classid, int namedesc) {
-		
+
 	}
-	
+
 	public static Object rawNewObject(int classid) {
 		return VMNatives.allocateStructure(VMAccess.getClassEntity(classid));
 	}

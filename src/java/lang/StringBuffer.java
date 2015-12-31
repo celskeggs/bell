@@ -122,14 +122,14 @@ public final class StringBuffer {
 		length += ln;
 		return this;
 	}
-	
+
 	public StringBuffer append(CharSequence s) {
 		if (s == null) {
 			s = "null";
 		}
 		return append(s.toString());
 	}
-	
+
 	public StringBuffer append(CharSequence s, int start, int end) {
 		if (s == null) {
 			s = "null";

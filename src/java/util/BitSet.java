@@ -556,11 +556,11 @@ public class BitSet /* implements Serializable, Clonable */ {
 		}
 		return (int) ((h >> 32) ^ h);
 	}
-	
+
 	public int size() {
 		return contents.length << 6;
 	}
-	
+
 	public boolean equals(Object obj) {
 		if (obj instanceof BitSet) {
 			BitSet b = (BitSet) obj;
@@ -592,11 +592,11 @@ public class BitSet /* implements Serializable, Clonable */ {
 			return false;
 		}
 	}
-	
+
 	public Object clone() {
 		throw new IncompleteImplementationError();
 	}
-	
+
 	public String toString() {
 		StringBuilder sb = new StringBuilder("{");
 		for (int i = 0; i < contents.length; i++) {

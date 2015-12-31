@@ -81,4 +81,14 @@ public final class Long extends Number {
 		i = i + (i >>> 32);
 		return (int) i & 0x7f;
 	}
+
+	public static int compare(long x, long y) {
+		if (x < y) {
+			return -1;
+		} else if (x > y) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
 }

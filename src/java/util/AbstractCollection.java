@@ -27,7 +27,7 @@ public abstract class AbstractCollection<E> implements Collection<E> {
 	}
 
 	public <T> T[] toArray(T[] a) {
-		return new ArrayList<E>(this).<T>toArray(a);
+		return new ArrayList<E>(this).<T> toArray(a);
 	}
 
 	public boolean add(E e) {

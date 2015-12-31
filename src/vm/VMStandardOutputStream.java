@@ -6,7 +6,7 @@ import java.io.OutputStream;
 public class VMStandardOutputStream extends OutputStream {
 
 	private final boolean isError;
-	
+
 	public VMStandardOutputStream(boolean isError) {
 		this.isError = isError;
 	}

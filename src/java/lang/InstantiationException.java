@@ -2,11 +2,11 @@ package java.lang;
 
 public class InstantiationException extends Exception {
 
-    public InstantiationException() {
-        super();
-    }
+	public InstantiationException() {
+		super();
+	}
 
-    public InstantiationException(String message) {
-        super(message);
-    }
+	public InstantiationException(String message) {
+		super(message);
+	}
 }

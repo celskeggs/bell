@@ -122,14 +122,14 @@ public final class StringBuilder {
 		length += ln;
 		return this;
 	}
-	
+
 	public StringBuilder append(CharSequence s) {
 		if (s == null) {
 			s = "null";
 		}
 		return append(s.toString());
 	}
-	
+
 	public StringBuilder append(CharSequence s, int start, int end) {
 		if (s == null) {
 			s = "null";

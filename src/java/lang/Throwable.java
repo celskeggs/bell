@@ -52,7 +52,7 @@ public class Throwable {
 			fillInStackTrace();
 		}
 	}
-	
+
 	public synchronized final void addSuppressed(Throwable exception) {
 		if (exception == null) {
 			throw new NullPointerException();
@@ -67,7 +67,7 @@ public class Throwable {
 			suppressed[suppressed.length - 1] = exception;
 		}
 	}
-	
+
 	public synchronized final Throwable[] getSuppressed() {
 		return suppressed == null ? new Throwable[0] : Arrays.copyOf(suppressed, suppressed.length);
 	}

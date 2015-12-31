@@ -2,26 +2,26 @@ package java.lang;
 
 public final class Double extends Number {
 
-    private final double value;
+	private final double value;
 
-    public Double(double value) {
-        this.value = value;
-    }
+	public Double(double value) {
+		this.value = value;
+	}
 
-    public int intValue() {
-        return (int) value;
-    }
+	public int intValue() {
+		return (int) value;
+	}
 
-    public String toString() {
-        return toString(value);
-    }
+	public String toString() {
+		return toString(value);
+	}
 
-    public int hashCode() {
-        long l = Double.doubleToLongBits(value);
-        return ((int) (l >> 32)) ^ (int) l;
-    }
+	public int hashCode() {
+		long l = Double.doubleToLongBits(value);
+		return ((int) (l >> 32)) ^ (int) l;
+	}
 
-    public static long doubleToLongBits(double value) {
+	public static long doubleToLongBits(double value) {
 		throw new IncompleteImplementationError();
 	}
 
@@ -30,8 +30,8 @@ public final class Double extends Number {
 	}
 
 	public boolean equals(Object o) {
-        return (o instanceof Double) && (((Double) o).value == value);
-    }
+		return (o instanceof Double) && (((Double) o).value == value);
+	}
 
 	public double doubleValue() {
 		return value;
@@ -47,5 +47,9 @@ public final class Double extends Number {
 
 	public static String toString(double d) {
 		throw new IncompleteImplementationError();
+	}
+
+	public static boolean isNaN(double y) {
+		return y != y;
 	}
 }

@@ -23,7 +23,7 @@ public abstract class VMClass {
 	}
 
 	public abstract boolean isPrimitive();
-	
+
 	public abstract Object newInstance() throws InstantiationException;
 
 	public abstract String getName();
@@ -95,7 +95,7 @@ public abstract class VMClass {
 				return true;
 			} else {
 				int ic = cls.getInterfaceCount();
-				for (int i=0; i<ic; i++) {
+				for (int i = 0; i < ic; i++) {
 					VMClass vmc = cls.getInterfaceN(i);
 					if (this.isAssignableFrom(vmc)) {
 						return true;
@@ -122,6 +122,7 @@ public abstract class VMClass {
 	}
 
 	private static Class allocateClassForVMClass(VMClass id) {
-		return (Class) VMNatives.idToObject(VMNatives.call1(ALLOCATE_CLASS_FOR_VMCLASS_METHOD_ID, VMNatives.objectToID(id)));
+		return (Class) VMNatives
+				.idToObject(VMNatives.call1(ALLOCATE_CLASS_FOR_VMCLASS_METHOD_ID, VMNatives.objectToID(id)));
 	}
 }

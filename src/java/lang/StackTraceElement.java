@@ -45,13 +45,15 @@ public class StackTraceElement {
 	public boolean equals(Object o) {
 		if (o instanceof StackTraceElement) {
 			StackTraceElement s = (StackTraceElement) o;
-			return lineNumber == s.lineNumber && Objects.equals(fileName, s.fileName) && methodName.equals(methodName) && declaringClass.equals(declaringClass);
+			return lineNumber == s.lineNumber && Objects.equals(fileName, s.fileName) && methodName.equals(methodName)
+					&& declaringClass.equals(declaringClass);
 		} else {
 			return false;
 		}
 	}
 
 	public String toString() {
-		return declaringClass + "." + methodName + "(" + (isNativeMethod() ? "Native Method" : fileName == null ? "Unknown Source" : hasLineNumber() ? fileName + ":" + lineNumber : fileName) + ")";
+		return declaringClass + "." + methodName + "(" + (isNativeMethod() ? "Native Method"
+				: fileName == null ? "Unknown Source" : hasLineNumber() ? fileName + ":" + lineNumber : fileName) + ")";
 	}
 }

@@ -10,7 +10,7 @@ public class HashMap<K, V> extends AbstractMap<K, V> {
 			this.next = next;
 		}
 	}
-	
+
 	private final class SetView extends AbstractSet<Map.Entry<K, V>> {
 		public Iterator<Map.Entry<K, V>> iterator() {
 			return new EntryIterator();
@@ -26,7 +26,7 @@ public class HashMap<K, V> extends AbstractMap<K, V> {
 		private boolean canRemove;
 		private K keyRemove;
 		private LinkedEntry<K, V> cur = null;
-		
+
 		public boolean hasNext() {
 			while (cur == null) {
 				if (index >= entries.length) {
@@ -224,12 +224,12 @@ public class HashMap<K, V> extends AbstractMap<K, V> {
 		}
 		return false;
 	}
-	
+
 	public Object clone() {
 		throw new IncompleteImplementationError();
 	}
-	
-	public Set<Map.Entry<K,V>> entrySet() {
+
+	public Set<Map.Entry<K, V>> entrySet() {
 		if (setView == null) {
 			setView = new SetView();
 		}
