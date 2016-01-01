@@ -34,7 +34,7 @@ public class ByteArrayOutputStream extends OutputStream {
 			throw new IndexOutOfBoundsException();
 		}
 		if (count + len > buf.length) {
-			buf = Arrays.copyOf(buf, Math.min(count * 2, count + len) + 8);
+			buf = Arrays.copyOf(buf, Math.max(count * 2, count + len) + 8);
 		}
 		System.arraycopy(b, off, buf, count, len);
 		count += len;

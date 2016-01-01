@@ -26,6 +26,8 @@ public class CharArrayReader extends Reader {
 		this.count = Math.min(offset + length, buf.length);
 	}
 
+	// TODO: synchronization?
+
 	@Override
 	public int read() throws IOException {
 		if (buf == null) {

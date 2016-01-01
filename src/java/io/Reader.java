@@ -8,7 +8,7 @@ public abstract class Reader implements Readable, Closeable {
 	protected final Object lock;
 
 	protected Reader() {
-		lock = this;
+		this.lock = this;
 	}
 
 	protected Reader(Object lock) {

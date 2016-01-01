@@ -33,4 +33,10 @@ public class Arrays {
 		System.arraycopy(original, 0, created, 0, Math.min(newLength, original.length));
 		return created;
 	}
+
+	public static char[] copyOf(char[] original, int newLength) {
+		char[] created = new char[newLength];
+		System.arraycopy(original, 0, created, 0, Math.min(newLength, original.length));
+		return created;
+	}
 }
