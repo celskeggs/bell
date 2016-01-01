@@ -1,5 +1,8 @@
 package java.util;
 
+import java.nio.ByteBuffer;
+import java.nio.LongBuffer;
+
 public class BitSet /* implements Serializable, Clonable */ {
 
 	// each long contains 64 bits: see Long.SIZE
@@ -24,8 +27,11 @@ public class BitSet /* implements Serializable, Clonable */ {
 	}
 
 	public static BitSet valueOf(LongBuffer lb) {
-		// TODO
-		throw new IncompleteImplementationError();
+		long[] longs = new long[lb.remaining()];
+		// TODO: what if this messes up the mark?
+		int orig = lb.position();
+		lb.get(longs).position(orig);
+		return valueOf(longs);
 	}
 
 	public static BitSet valueOf(byte[] bytes) {
@@ -37,8 +43,11 @@ public class BitSet /* implements Serializable, Clonable */ {
 	}
 
 	public static BitSet valueOf(ByteBuffer bb) {
-		// TODO
-		throw new IncompleteImplementationError();
+		byte[] bytes = new byte[bb.remaining()];
+		// TODO: what if this messes up the mark?
+		int orig = bb.position();
+		bb.get(bytes).position(orig);
+		return valueOf(bytes);
 	}
 
 	public byte[] toByteArray() {

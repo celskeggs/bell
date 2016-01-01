@@ -62,6 +62,9 @@ public abstract class LongBuffer extends Buffer implements Comparable<LongBuffer
 		if (src == this) {
 			throw new IllegalArgumentException();
 		}
+		if (src.remaining() > remaining()) {
+			throw new BufferOverflowException();
+		}
 		// TODO: override this in subclasses
 		// TODO: optimize?
 		while (src.hasRemaining()) {

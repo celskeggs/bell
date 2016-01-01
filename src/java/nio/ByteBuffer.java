@@ -2,9 +2,9 @@ package java.nio;
 
 public abstract class ByteBuffer extends Buffer implements Comparable<ByteBuffer> {
 
-	private final byte[] array;
-	private final int array_offset;
-	private ByteOrder order;
+	final byte[] array;
+	final int array_offset;
+	ByteOrder order;
 
 	ByteBuffer(int capacity, byte[] array, int array_offset) {
 		super(capacity);
@@ -64,6 +64,9 @@ public abstract class ByteBuffer extends Buffer implements Comparable<ByteBuffer
 	public ByteBuffer put(ByteBuffer src) {
 		if (src == this) {
 			throw new IllegalArgumentException();
+		}
+		if (src.remaining() > remaining()) {
+			throw new BufferOverflowException();
 		}
 		// TODO: override this in subclasses
 		// TODO: optimize?

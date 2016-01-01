@@ -62,6 +62,9 @@ public abstract class IntBuffer extends Buffer implements Comparable<IntBuffer> 
 		if (src == this) {
 			throw new IllegalArgumentException();
 		}
+		if (src.remaining() > remaining()) {
+			throw new BufferOverflowException();
+		}
 		// TODO: override this in subclasses
 		// TODO: optimize?
 		while (src.hasRemaining()) {

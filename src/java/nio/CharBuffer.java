@@ -75,6 +75,9 @@ public abstract class CharBuffer extends Buffer implements Comparable<CharBuffer
 		if (src == this) {
 			throw new IllegalArgumentException();
 		}
+		if (src.remaining() > remaining()) {
+			throw new BufferOverflowException();
+		}
 		// TODO: override this in subclasses
 		// TODO: optimize?
 		while (src.hasRemaining()) {
