@@ -1,7 +1,5 @@
 package java.util;
 
-import java.lang.reflect.Array;
-
 import com.colbyskeggs.support.CUtil;
 
 public class ArrayList<E> extends AbstractList<E>

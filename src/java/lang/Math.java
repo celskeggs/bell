@@ -15,4 +15,16 @@ public class Math {
 	public static int abs(int x) {
 		return x < 0 ? -x : x;
 	}
+
+	public static long max(long a, long b) {
+		return a > b ? a : b;
+	}
+
+	public static long min(long a, long b) {
+		return a < b ? a : b;
+	}
+
+	public static long abs(long x) {
+		return x < 0 ? -x : x;
+	}
 }

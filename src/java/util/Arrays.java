@@ -27,4 +27,10 @@ public class Arrays {
 		System.arraycopy(original, from, created, 0, created.length);
 		return created;
 	}
+
+	public static byte[] copyOf(byte[] original, int newLength) {
+		byte[] created = new byte[newLength];
+		System.arraycopy(original, 0, created, 0, Math.min(newLength, original.length));
+		return created;
+	}
 }
