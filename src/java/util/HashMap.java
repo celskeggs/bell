@@ -109,7 +109,7 @@ public class HashMap<K, V> extends AbstractMap<K, V> {
 	private LinkedEntry<K, V> entryFor(Object key) {
 		LinkedEntry<K, V> ent = entries[bucketFor(key)];
 		while (ent != null) {
-			if (ent.getKey().equals(key)) {
+			if (Objects.equals(ent.getKey(), key)) {
 				return ent;
 			}
 			ent = ent.next;
