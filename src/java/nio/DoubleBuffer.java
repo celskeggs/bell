@@ -1,11 +1,9 @@
 package java.nio;
 
-import java.io.IOException;
-
 public abstract class DoubleBuffer extends Buffer implements Comparable<DoubleBuffer> {
 
-	private final double[] array;
-	private final int array_offset;
+	final double[] array;
+	final int array_offset;
 
 	DoubleBuffer(int capacity, double[] array, int array_offset) {
 		super(capacity);
@@ -18,6 +16,9 @@ public abstract class DoubleBuffer extends Buffer implements Comparable<DoubleBu
 	}
 
 	public static DoubleBuffer wrap(double[] array, int offset, int length) {
+		if (offset < 0 || offset > array.length || length < 0 || length > array.length - offset) {
+			throw new IndexOutOfBoundsException();
+		}
 		return new ArrayDoubleBuffer(array, offset, length);
 	}
 
@@ -61,6 +62,9 @@ public abstract class DoubleBuffer extends Buffer implements Comparable<DoubleBu
 	public DoubleBuffer put(DoubleBuffer src) {
 		if (src == this) {
 			throw new IllegalArgumentException();
+		}
+		if (src.remaining() > remaining()) {
+			throw new BufferOverflowException();
 		}
 		// TODO: override this in subclasses
 		// TODO: optimize?

@@ -1,11 +1,9 @@
 package java.nio;
 
-import java.io.IOException;
-
 public abstract class FloatBuffer extends Buffer implements Comparable<FloatBuffer> {
 
-	private final float[] array;
-	private final int array_offset;
+	final float[] array;
+	final int array_offset;
 
 	FloatBuffer(int capacity, float[] array, int array_offset) {
 		super(capacity);
@@ -18,6 +16,9 @@ public abstract class FloatBuffer extends Buffer implements Comparable<FloatBuff
 	}
 
 	public static FloatBuffer wrap(float[] array, int offset, int length) {
+		if (offset < 0 || offset > array.length || length < 0 || length > array.length - offset) {
+			throw new IndexOutOfBoundsException();
+		}
 		return new ArrayFloatBuffer(array, offset, length);
 	}
 

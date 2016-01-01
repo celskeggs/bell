@@ -21,6 +21,9 @@ public abstract class ByteBuffer extends Buffer implements Comparable<ByteBuffer
 	}
 
 	public static ByteBuffer wrap(byte[] array, int offset, int length) {
+		if (offset < 0 || offset > array.length || length < 0 || length > array.length - offset) {
+			throw new IndexOutOfBoundsException();
+		}
 		return new ArrayByteBuffer(array, offset, length);
 	}
 

@@ -4,8 +4,8 @@ import java.io.IOException;
 
 public abstract class CharBuffer extends Buffer implements Comparable<CharBuffer>, Appendable, CharSequence, Readable {
 
-	private final char[] array;
-	private final int array_offset;
+	final char[] array;
+	final int array_offset;
 
 	CharBuffer(int capacity, char[] array, int array_offset) {
 		super(capacity);
@@ -18,6 +18,9 @@ public abstract class CharBuffer extends Buffer implements Comparable<CharBuffer
 	}
 
 	public static CharBuffer wrap(char[] array, int offset, int length) {
+		if (offset < 0 || offset > array.length || length < 0 || length > array.length - offset) {
+			throw new IndexOutOfBoundsException();
+		}
 		return new ArrayCharBuffer(array, offset, length);
 	}
 
@@ -26,12 +29,21 @@ public abstract class CharBuffer extends Buffer implements Comparable<CharBuffer
 	}
 
 	public int read(CharBuffer target) throws IOException {
-		int to_transfer = Math.min(remaining(), target.remaining());
-		// TODO
+		// TODO: override this in subclasses
+		// TODO: optimize?
+		int count = 0;
+		while (hasRemaining() && target.hasRemaining()) {
+			target.put(get());
+			count++;
+		}
+		return count;
 	}
 
 	public static CharBuffer wrap(CharSequence csq, int start, int end) {
-		return new SequenceCharBuffer(csq, start, end);
+		if (start < 0 || start > csq.length() || end < start || end > csq.length()) {
+			throw new IndexOutOfBoundsException();
+		}
+		return new SequenceCharBuffer(csq, start, end - start);
 	}
 
 	public static CharBuffer wrap(CharSequence csq) {
@@ -120,6 +132,7 @@ public abstract class CharBuffer extends Buffer implements Comparable<CharBuffer
 		for (int i = start; i < end; i++) {
 			put(src.charAt(i));
 		}
+		return this;
 	}
 
 	public final CharBuffer put(String src) {
@@ -209,6 +222,9 @@ public abstract class CharBuffer extends Buffer implements Comparable<CharBuffer
 	}
 
 	public final char charAt(int index) {
+		if (index < 0 || index >= remaining()) {
+			throw new IndexOutOfBoundsException();
+		}
 		return get(position() + index);
 	}
 

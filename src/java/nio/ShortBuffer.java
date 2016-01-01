@@ -1,11 +1,9 @@
 package java.nio;
 
-import java.io.IOException;
-
 public abstract class ShortBuffer extends Buffer implements Comparable<ShortBuffer> {
 
-	private final short[] array;
-	private final int array_offset;
+	final short[] array;
+	final int array_offset;
 
 	ShortBuffer(int capacity, short[] array, int array_offset) {
 		super(capacity);
@@ -18,6 +16,9 @@ public abstract class ShortBuffer extends Buffer implements Comparable<ShortBuff
 	}
 
 	public static ShortBuffer wrap(short[] array, int offset, int length) {
+		if (offset < 0 || offset > array.length || length < 0 || length > array.length - offset) {
+			throw new IndexOutOfBoundsException();
+		}
 		return new ArrayShortBuffer(array, offset, length);
 	}
 

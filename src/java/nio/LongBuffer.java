@@ -1,11 +1,9 @@
 package java.nio;
 
-import java.io.IOException;
-
 public abstract class LongBuffer extends Buffer implements Comparable<LongBuffer> {
 
-	private final long[] array;
-	private final int array_offset;
+	final long[] array;
+	final int array_offset;
 
 	LongBuffer(int capacity, long[] array, int array_offset) {
 		super(capacity);
@@ -18,6 +16,9 @@ public abstract class LongBuffer extends Buffer implements Comparable<LongBuffer
 	}
 
 	public static LongBuffer wrap(long[] array, int offset, int length) {
+		if (offset < 0 || offset > array.length || length < 0 || length > array.length - offset) {
+			throw new IndexOutOfBoundsException();
+		}
 		return new ArrayLongBuffer(array, offset, length);
 	}
 

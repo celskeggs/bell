@@ -20,7 +20,7 @@ final class ArrayByteBuffer extends ByteBuffer {
 
 	@Override
 	public ByteBuffer slice() {
-		return new ArrayByteBuffer(array, position(), remaining(), 0, remaining(), read_only);
+		return new ArrayByteBuffer(array, array_offset + position(), remaining(), 0, remaining(), read_only);
 	}
 
 	@Override
@@ -79,6 +79,7 @@ final class ArrayByteBuffer extends ByteBuffer {
 		return this;
 	}
 
+	@Override
 	public ByteBuffer get(byte[] dst, int offset, int length) {
 		if (length > remaining()) {
 			throw new BufferUnderflowException();
@@ -91,6 +92,7 @@ final class ArrayByteBuffer extends ByteBuffer {
 		return this;
 	}
 
+	@Override
 	public ByteBuffer get(byte[] dst) {
 		if (dst.length > remaining()) {
 			throw new BufferUnderflowException();
@@ -100,6 +102,7 @@ final class ArrayByteBuffer extends ByteBuffer {
 		return this;
 	}
 
+	@Override
 	public ByteBuffer put(ByteBuffer src) {
 		checkReadOnly();
 		if (src == this) {
@@ -114,6 +117,7 @@ final class ArrayByteBuffer extends ByteBuffer {
 		return this;
 	}
 
+	@Override
 	public ByteBuffer put(byte[] src, int offset, int length) {
 		checkReadOnly();
 		if (length > remaining()) {
@@ -143,75 +147,63 @@ final class ArrayByteBuffer extends ByteBuffer {
 	}
 
 	@Override
-	public char getChar() {
+	public short getShort() {
 		if (position + 1 >= limit) {
 			throw new BufferUnderflowException();
 		}
-		char out = getChar(position);
+		short out = getShort(position);
 		position += 2;
 		return out;
 	}
 
 	@Override
-	public ByteBuffer putChar(char value) {
+	public ByteBuffer putShort(short value) {
 		if (position + 1 >= limit) {
 			throw new BufferOverflowException();
 		}
-		putChar(position, value);
+		putShort(position, value);
 		position += 2;
 		return this;
 	}
 
 	@Override
-	public char getChar(int index) {
-		if (index < 0 || index + 1 >= limit) {
-			throw new IndexOutOfBoundsException();
-		}
-		int f = array[array_offset + index] & 0xFF;
-		int s = array[array_offset + index + 1] & 0xFF;
-		if (order == ByteOrder.LITTLE_ENDIAN) {
-			return (char) (f | (s << 8));
-		} else {
-			return (char) ((f << 8) | s);
-		}
-	}
-
-	@Override
-	public ByteBuffer putChar(int index, char value) {
-		checkReadOnly();
-		if (index < 0 || index + 1 >= limit) {
-			throw new IndexOutOfBoundsException();
-		}
-		if (order == ByteOrder.LITTLE_ENDIAN) {
-			array[array_offset + index] = (byte) value;
-			array[array_offset + index + 1] = (byte) (value >> 8);
-		} else {
-			array[array_offset + index] = (byte) (value >> 8);
-			array[array_offset + index + 1] = (byte) value;
-		}
-		return this;
-	}
-
-	@Override
-	public short getShort() {
-		// both are 16 bits
-		return (short) getChar();
-	}
-
-	@Override
-	public ByteBuffer putShort(short value) {
-		putChar((char) value);
-		return this;
-	}
-
-	@Override
 	public short getShort(int index) {
-		return (short) getChar(index);
+		if (index < 0 || index + 1 >= limit) {
+			throw new IndexOutOfBoundsException();
+		}
+		return order.getShort(array, array_offset + index);
 	}
 
 	@Override
 	public ByteBuffer putShort(int index, short value) {
-		putChar(index, (char) value);
+		checkReadOnly();
+		if (index < 0 || index + 1 >= limit) {
+			throw new IndexOutOfBoundsException();
+		}
+		order.putShort(array, array_offset + index, value);
+		return this;
+	}
+
+	@Override
+	public char getChar() {
+		// both are 16 bits
+		return (char) getShort();
+	}
+
+	@Override
+	public ByteBuffer putChar(char value) {
+		putShort((short) value);
+		return this;
+	}
+
+	@Override
+	public char getChar(int index) {
+		return (char) getShort(index);
+	}
+
+	@Override
+	public ByteBuffer putChar(int index, char value) {
+		putShort(index, (short) value);
 		return this;
 	}
 
@@ -240,15 +232,7 @@ final class ArrayByteBuffer extends ByteBuffer {
 		if (index < 0 || index + 3 >= limit) {
 			throw new IndexOutOfBoundsException();
 		}
-		int b1 = array[array_offset + index] & 0xFF;
-		int b2 = array[array_offset + index + 1] & 0xFF;
-		int b3 = array[array_offset + index + 2] & 0xFF;
-		int b4 = array[array_offset + index + 3] & 0xFF;
-		if (order == ByteOrder.LITTLE_ENDIAN) {
-			return b1 | (b2 << 8) | (b3 << 16) | (b4 << 24);
-		} else {
-			return (b1 << 24) | (b2 << 16) | (b3 << 8) | b4;
-		}
+		return order.getInt(array, array_offset + index);
 	}
 
 	@Override
@@ -257,17 +241,7 @@ final class ArrayByteBuffer extends ByteBuffer {
 		if (index < 0 || index + 3 >= limit) {
 			throw new IndexOutOfBoundsException();
 		}
-		if (order == ByteOrder.LITTLE_ENDIAN) {
-			array[array_offset + index] = (byte) value;
-			array[array_offset + index + 1] = (byte) (value >> 8);
-			array[array_offset + index + 2] = (byte) (value >> 16);
-			array[array_offset + index + 3] = (byte) (value >> 24);
-		} else {
-			array[array_offset + index] = (byte) (value >> 24);
-			array[array_offset + index + 1] = (byte) (value >> 16);
-			array[array_offset + index + 2] = (byte) (value >> 8);
-			array[array_offset + index + 3] = (byte) value;
-		}
+		order.putInt(array, array_offset + index, value);
 		return this;
 	}
 
@@ -296,19 +270,7 @@ final class ArrayByteBuffer extends ByteBuffer {
 		if (index < 0 || index + 7 >= limit) {
 			throw new IndexOutOfBoundsException();
 		}
-		long b1 = array[array_offset + index] & 0xFF;
-		long b2 = array[array_offset + index + 1] & 0xFF;
-		long b3 = array[array_offset + index + 2] & 0xFF;
-		long b4 = array[array_offset + index + 3] & 0xFF;
-		long b5 = array[array_offset + index] & 0xFF;
-		long b6 = array[array_offset + index + 1] & 0xFF;
-		long b7 = array[array_offset + index + 2] & 0xFF;
-		long b8 = array[array_offset + index + 3] & 0xFF;
-		if (order == ByteOrder.LITTLE_ENDIAN) {
-			return b1 | (b2 << 8) | (b3 << 16) | (b4 << 24) | (b5 << 32) | (b6 << 40) | (b7 << 48) | (b8 << 56);
-		} else {
-			return (b1 << 56) | (b2 << 48) | (b3 << 40) | (b4 << 32) | (b5 << 24) | (b6 << 16) | (b7 << 8) | b8;
-		}
+		return order.getLong(array, array_offset + index);
 	}
 
 	@Override
@@ -317,25 +279,7 @@ final class ArrayByteBuffer extends ByteBuffer {
 		if (index < 0 || index + 7 >= limit) {
 			throw new IndexOutOfBoundsException();
 		}
-		if (order == ByteOrder.LITTLE_ENDIAN) {
-			array[array_offset + index] = (byte) value;
-			array[array_offset + index + 1] = (byte) (value >> 8);
-			array[array_offset + index + 2] = (byte) (value >> 16);
-			array[array_offset + index + 3] = (byte) (value >> 24);
-			array[array_offset + index + 4] = (byte) (value >> 32);
-			array[array_offset + index + 5] = (byte) (value >> 40);
-			array[array_offset + index + 6] = (byte) (value >> 48);
-			array[array_offset + index + 7] = (byte) (value >> 56);
-		} else {
-			array[array_offset + index] = (byte) (value >> 56);
-			array[array_offset + index + 1] = (byte) (value >> 48);
-			array[array_offset + index + 2] = (byte) (value >> 40);
-			array[array_offset + index + 3] = (byte) (value >> 32);
-			array[array_offset + index + 4] = (byte) (value >> 24);
-			array[array_offset + index + 5] = (byte) (value >> 16);
-			array[array_offset + index + 6] = (byte) (value >> 8);
-			array[array_offset + index + 7] = (byte) value;
-		}
+		order.putLong(array, array_offset + index, value);
 		return this;
 	}
 
@@ -390,31 +334,31 @@ final class ArrayByteBuffer extends ByteBuffer {
 
 	@Override
 	public CharBuffer asCharBuffer() {
-		return new ViewCharBuffer(array, array_offset + position, remaining() / 2, read_only);
+		return new ViewCharBuffer(array, array_offset + position, remaining() / 2, order, read_only);
 	}
 
 	@Override
 	public ShortBuffer asShortBuffer() {
-		return new ViewShortBuffer(array, array_offset + position, remaining() / 2, read_only);
+		return new ViewShortBuffer(array, array_offset + position, remaining() / 2, order, read_only);
 	}
 
 	@Override
 	public IntBuffer asIntBuffer() {
-		return new ViewIntBuffer(array, array_offset + position, remaining() / 2, read_only);
+		return new ViewIntBuffer(array, array_offset + position, remaining() / 2, order, read_only);
 	}
 
 	@Override
 	public LongBuffer asLongBuffer() {
-		return new ViewLongBuffer(array, array_offset + position, remaining() / 2, read_only);
+		return new ViewLongBuffer(array, array_offset + position, remaining() / 2, order, read_only);
 	}
 
 	@Override
 	public FloatBuffer asFloatBuffer() {
-		return new ViewFloatBuffer(array, array_offset + position, remaining() / 2, read_only);
+		return new ViewFloatBuffer(array, array_offset + position, remaining() / 2, order, read_only);
 	}
 
 	@Override
 	public DoubleBuffer asDoubleBuffer() {
-		return new ViewDoubleBuffer(array, array_offset + position, remaining() / 2, read_only);
+		return new ViewDoubleBuffer(array, array_offset + position, remaining() / 2, order, read_only);
 	}
 }

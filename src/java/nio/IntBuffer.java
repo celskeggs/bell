@@ -1,11 +1,9 @@
 package java.nio;
 
-import java.io.IOException;
-
 public abstract class IntBuffer extends Buffer implements Comparable<IntBuffer> {
 
-	private final int[] array;
-	private final int array_offset;
+	final int[] array;
+	final int array_offset;
 
 	IntBuffer(int capacity, int[] array, int array_offset) {
 		super(capacity);
@@ -18,6 +16,9 @@ public abstract class IntBuffer extends Buffer implements Comparable<IntBuffer> 
 	}
 
 	public static IntBuffer wrap(int[] array, int offset, int length) {
+		if (offset < 0 || offset > array.length || length < 0 || length > array.length - offset) {
+			throw new IndexOutOfBoundsException();
+		}
 		return new ArrayIntBuffer(array, offset, length);
 	}
 
