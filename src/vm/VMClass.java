@@ -1,5 +1,9 @@
 package vm;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 public abstract class VMClass {
 	// TODO: find this somehow
 	private static final int ALLOCATE_CLASS_FOR_VMCLASS_METHOD_ID = -1;
@@ -10,12 +14,12 @@ public abstract class VMClass {
 	public static final VMClass INT = null;
 	public static final VMClass SHORT = null;
 
-	private Class realClass;
+	private Class<?> realClass;
 
 	VMClass() {
 	}
 
-	public Class getRealClass() {
+	public Class<?> getRealClass() {
 		if (realClass == null) {
 			realClass = allocateClassForVMClass(this);
 		}
@@ -90,7 +94,11 @@ public abstract class VMClass {
 			} else if (cls.isPrimitive()) {
 				return false;
 			} else if (cls.isArray() || cls.isInterface()) {
-				return "java/lang/Object".equals(getName());
+				return "java/lang/Object".equals(getName()); // TODO: check if
+																// this is
+																// correct
+																// behavior for
+																// interfaces
 			} else if (this.isAssignableFrom(cls.getSuperClass())) {
 				return true;
 			} else {
@@ -121,8 +129,28 @@ public abstract class VMClass {
 		}
 	}
 
-	private static Class allocateClassForVMClass(VMClass id) {
-		return (Class) VMNatives
+	private static Class<?> allocateClassForVMClass(VMClass id) {
+		return (Class<?>) VMNatives
 				.idToObject(VMNatives.call1(ALLOCATE_CLASS_FOR_VMCLASS_METHOD_ID, VMNatives.objectToID(id)));
 	}
+
+	public abstract Class<?> getComponentType();
+
+	// null if not found; check only THIS class; don't check for public
+	public abstract Field getField(String name);
+
+	// null if not found; check only THIS class; don't check for public
+	public abstract Method getMethod(String name, VMClass[] params);
+
+	// null if not found; check only THIS class; don't check for public
+	public abstract Constructor<?> getConstructor(VMClass[] params);
+
+	// check only THIS class; don't check for public
+	public abstract Field[] getFields();
+
+	// check only THIS class; don't check for public
+	public abstract Method[] getMethods();
+
+	public abstract Constructor<?>[] getConstructors();
+
 }
