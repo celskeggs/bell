@@ -141,7 +141,7 @@ public class HashMap<K, V> extends AbstractMap<K, V> {
 		entries[bucket] = new LinkedEntry<K, V>(key, value, entries[bucket]);
 	}
 
-	private void increaseCapacity(int size) {
+	void increaseCapacity(int size) {
 		LinkedEntry<K, V>[] old = entries;
 		entries = (LinkedEntry<K, V>[]) new LinkedEntry<?, ?>[size];
 		for (LinkedEntry<K, V> ent : old) {
@@ -153,6 +153,10 @@ public class HashMap<K, V> extends AbstractMap<K, V> {
 				ent = old_next;
 			} while (ent != null);
 		}
+	}
+
+	int capacity() {
+		return entries.length;
 	}
 
 	public V get(Object key) {
