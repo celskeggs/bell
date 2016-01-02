@@ -17,30 +17,34 @@ public final class Long extends Number {
 
 	private static char[] digits = "0123456789abcdefghijklmnopqrstuvwxyz".toCharArray();
 
-	public static String toString(long i, int radix) {
+	public static String toString(long l, int radix) {
 		if (radix < Character.MIN_RADIX || radix > Character.MAX_RADIX) {
 			radix = 10;
 		}
 		boolean negative;
-		if (i == 0) {
+		if (l == 0) {
 			return "0";
-		} else if (i < 0) {
+		} else if (l < 0) {
 			negative = true;
-			i = -i;
+			l = -l;
 		} else {
 			negative = false;
 		}
 		char[] out = new char[28]; // TODO: find a better number than 28
 		int ci = 28;
-		while (i != 0) {
-			int mod = (int) (i % radix);
-			i = i / radix;
+		while (l != 0) {
+			int mod = (int) (l % radix);
+			l = l / radix;
 			out[--ci] = digits[mod];
 		}
 		if (negative) {
 			out[--ci] = '-';
 		}
-		return new String(out, ci, 28 - ci, true);
+		return new String(out, ci, 28 - ci);
+	}
+
+	public static String toHexString(long l) {
+		return toString(l, 16);
 	}
 
 	public static String toString(long l) {

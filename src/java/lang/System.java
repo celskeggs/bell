@@ -27,6 +27,14 @@ public final class System {
 		}
 		if (key.equals("line.separator")) {
 			return "\n"; // duplicated in PrintStream
+		} else if (key.equals("file.separator")) {
+			return "/";
+		} else if (key.equals("path.separator")) {
+			return ":";
+		} else if (key.equals("user.dir")) {
+			return "/tmp"; // TODO: determine current working directory PROPERLY
+		} else if (key.equals("java.io.tmpdir")) {
+			return "/tmp";
 		}
 		// TODO: Implement this better
 		return null;

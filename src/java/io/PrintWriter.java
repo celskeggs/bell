@@ -212,7 +212,7 @@ public class PrintWriter extends Writer {
 	}
 
 	public PrintWriter format(String format, Object... args) {
-		this.format(Locale.getDefault(), format, args)
+		this.format(Locale.getDefault(), format, args);
 		return this;
 	}
 

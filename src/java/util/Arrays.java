@@ -39,4 +39,21 @@ public class Arrays {
 		System.arraycopy(original, 0, created, 0, Math.min(newLength, original.length));
 		return created;
 	}
+
+	public static boolean equals(Object[] a, Object[] b) {
+		if (a == b) {
+			return true;
+		} else if (a == null || b == null) {
+			return false;
+		} else if (a.length != b.length) {
+			return false;
+		} else {
+			for (int i = 0; i < a.length; i++) {
+				if (!Objects.equals(a[i], b[i])) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}
 }

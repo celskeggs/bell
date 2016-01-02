@@ -75,10 +75,18 @@ public class PrintStream extends OutputStream implements Appendable {
 	public void print(int i) {
 		print(String.valueOf(i));
 	}
-	// TODO: Implement these along with longs, doubles, and floats
-	// public void print(long l)
-	// public void print(double d)
-	// public void print(float f)
+
+	public void print(long l) {
+		print(String.valueOf(l));
+	}
+
+	public void print(double d) {
+		print(String.valueOf(d));
+	}
+
+	public void print(float f) {
+		print(String.valueOf(f));
+	}
 
 	public void print(char[] c) {
 		print(String.valueOf(c));
@@ -114,10 +122,21 @@ public class PrintStream extends OutputStream implements Appendable {
 		println();
 	}
 
-	// TODO: Implement these along with longs, doubles, and floats
-	// public void println(long v)
-	// public void println(double v)
-	// public void println(float v)
+	public void println(long v) {
+		print(v);
+		println();
+	}
+
+	public void println(double v) {
+		print(v);
+		println();
+	}
+
+	public void println(float v) {
+		print(v);
+		println();
+	}
+
 	public void println(char[] v) {
 		print(v);
 		println();
