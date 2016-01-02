@@ -6,46 +6,32 @@ import vm.CharacterCoder;
 public final class String implements CharSequence {
 
 	final char[] data;
-	final int offset;
-	private final int length;
 	private int hashCode;
 
 	public String() {
-		offset = 0;
-		length = 0;
 		data = null;
 	}
 
 	public String(String value) {
 		data = value.data;
-		offset = value.offset;
-		length = value.length;
 	}
 
 	public String(char[] value) {
 		data = new char[value.length];
 		System.arraycopy(value, 0, data, 0, value.length);
-		offset = 0;
-		length = value.length;
 	}
 
 	public String(char[] value, int offset, int count) {
 		data = new char[count];
 		System.arraycopy(value, offset, data, 0, count);
-		this.offset = 0;
-		length = count;
 	}
 
-	String(char[] value, int offset, int count, boolean directcopymarker) {
+	String(char[] value, boolean directcopymarker) {
 		data = value;
-		this.offset = offset;
-		length = count;
 	}
 
 	public String(byte[] bytes, int offset, int length, String encoding) throws UnsupportedEncodingException {
 		data = CharacterCoder.decode(bytes, offset, length, encoding);
-		this.offset = 0;
-		this.length = data.length;
 	}
 
 	public String(byte[] bytes, String encoding) throws UnsupportedEncodingException {
@@ -55,8 +41,6 @@ public final class String implements CharSequence {
 	public String(byte[] bytes, int offset, int length) {
 		try {
 			data = CharacterCoder.decode(bytes, offset, length, CharacterCoder.DEFAULT_ENCODING);
-			this.offset = 0;
-			this.length = data.length;
 		} catch (UnsupportedEncodingException ex) {
 			throw new VirtualMachineError("Default encoding is not supported!");
 		}
@@ -68,49 +52,45 @@ public final class String implements CharSequence {
 
 	public String(StringBuffer buf) {
 		synchronized (buf) {
-			length = buf.length();
+			int length = buf.length();
 			data = new char[length];
 			buf.getChars(0, length, data, 0);
-			offset = 0;
 		}
 	}
 
 	public String(StringBuilder buf) {
-		length = buf.length();
+		int length = buf.length();
 		data = new char[length];
 		buf.getChars(0, length, data, 0);
-		offset = 0;
 	}
 
 	public int length() {
-		return length;
+		return data.length;
 	}
 
 	public char charAt(int i) {
-		if (i < 0 || i >= length) {
+		if (i < 0 || i >= data.length) {
 			throw new IndexOutOfBoundsException();
 		}
-		return data[i + offset];
+		return data[i];
 	}
 
 	public void getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin) {
-		if (srcBegin < 0 || srcBegin > srcEnd || srcEnd > length || dstBegin < 0
+		if (srcBegin < 0 || srcBegin > srcEnd || srcEnd > data.length || dstBegin < 0
 				|| dstBegin + srcEnd - srcBegin > dst.length) {
 			throw new IndexOutOfBoundsException();
 		}
-		srcBegin += offset;
-		srcEnd += offset;
 		for (int i = srcBegin, j = dstBegin; i < srcEnd; i++, j++) {
 			dst[j] = data[i];
 		}
 	}
 
 	public byte[] getBytes(String encoding) throws UnsupportedEncodingException {
-		return CharacterCoder.encode(data, offset, length, encoding);
+		return CharacterCoder.encode(data, 0, data.length, encoding);
 	}
 
 	public byte[] getBytes() {
-		return CharacterCoder.encodeDefault(data, offset, length);
+		return CharacterCoder.encodeDefault(data, 0, data.length);
 	}
 
 	public boolean equals(Object o) {
@@ -119,11 +99,11 @@ public final class String implements CharSequence {
 				return true;
 			} else {
 				String str = (String) o;
-				if (length != str.length) {
+				if (data.length != str.data.length) {
 					return false;
 				}
-				for (int i = 0; i < length; i++) {
-					if (str.data[i + str.offset] != data[i + offset]) {
+				for (int i = 0; i < data.length; i++) {
+					if (str.data[i] != data[i]) {
 						return false;
 					}
 				}
@@ -139,12 +119,13 @@ public final class String implements CharSequence {
 			return true;
 		} else {
 			String str = (String) o;
-			if (length != str.length) {
+			if (data.length != str.data.length) {
 				return false;
 			}
-			for (int i = 0; i < length; i++) {
-				char a = str.data[i + str.offset];
-				char b = data[i + offset];
+			for (int i = 0; i < data.length; i++) {
+				char a = str.data[i];
+				char b = data[i];
+				// TODO: review this algorithm
 				if (a != b && Character.toUpperCase(a) != Character.toUpperCase(b)
 						&& Character.toLowerCase(a) != Character.toLowerCase(b)) {
 					return false;
@@ -155,23 +136,21 @@ public final class String implements CharSequence {
 	}
 
 	public int compareTo(String other) {
-		int mlen = length <= other.length ? length : other.length;
+		int mlen = Math.min(data.length, other.data.length);
 		for (int i = 0; i < mlen; i++) {
-			char thisC = data[i + offset];
-			char otherC = other.data[i + other.offset];
+			char thisC = data[i];
+			char otherC = other.data[i];
 			if (thisC != otherC) {
 				return thisC - otherC;
 			}
 		}
-		return length - other.length;
+		return data.length - other.data.length;
 	}
 
 	public boolean regionMatches(boolean ignoreCase, int toffset, String other, int ooffset, int len) {
-		if (toffset < 0 || ooffset < 0 || toffset + len > length || ooffset + len > other.length) {
+		if (toffset < 0 || ooffset < 0 || toffset + len > data.length || ooffset + len > other.data.length) {
 			return false;
 		}
-		toffset += offset;
-		ooffset += other.offset;
 		for (int i = 0; i < len; i++) {
 			char thisC = data[i + toffset];
 			char otherC = other.data[i + ooffset];
@@ -184,28 +163,29 @@ public final class String implements CharSequence {
 	}
 
 	public boolean startsWith(String prefix, int toffset) {
-		if (toffset < 0 || toffset > length) {
+		if (toffset < 0 || toffset > data.length) {
+			// TODO: what if prefix is empty?
 			return false;
 		} else {
-			if (prefix.length > length - toffset) {
+			if (prefix.data.length > data.length - toffset) {
 				return false;
 			}
-			return regionMatches(false, toffset, prefix, 0, prefix.length);
+			return regionMatches(false, toffset, prefix, 0, prefix.data.length);
 		}
 	}
 
 	public boolean startsWith(String prefix) {
-		if (prefix.length > length) {
+		if (prefix.data.length > data.length) {
 			return false;
 		}
-		return regionMatches(false, 0, prefix, 0, prefix.length);
+		return regionMatches(false, 0, prefix, 0, prefix.data.length);
 	}
 
 	public boolean endsWith(String suffix) {
-		if (suffix.length > length) {
+		if (suffix.data.length > data.length) {
 			return false;
 		}
-		return regionMatches(false, length - suffix.length, suffix, 0, suffix.length);
+		return regionMatches(false, data.length - suffix.data.length, suffix, 0, suffix.data.length);
 	}
 
 	public int hashCode() {
@@ -218,7 +198,7 @@ public final class String implements CharSequence {
 	private void computeHashCode() {
 		int exp = 1;
 		int digest = 0;
-		for (int i = offset + length - 1; i >= offset; i--) {
+		for (int i = data.length - 1; i >= 0; i--) {
 			digest += data[i] * exp;
 			exp *= 31;
 		}
@@ -233,8 +213,8 @@ public final class String implements CharSequence {
 		if (fromIndex < 0) {
 			fromIndex = 0;
 		}
-		for (int i = fromIndex; i < length; i++) {
-			if (data[i + offset] == ch) {
+		for (int i = fromIndex; i < data.length; i++) {
+			if (data[i] == ch) {
 				return i;
 			}
 		}
@@ -242,15 +222,15 @@ public final class String implements CharSequence {
 	}
 
 	public int lastIndexOf(int ch) {
-		return lastIndexOf(ch, length - 1);
+		return lastIndexOf(ch, data.length - 1);
 	}
 
 	public int lastIndexOf(int ch, int fromIndex) {
-		if (fromIndex >= length) {
-			fromIndex = length - 1;
+		if (fromIndex >= data.length) {
+			fromIndex = data.length - 1;
 		}
 		for (int i = fromIndex; i >= 0; i--) {
-			if (data[i + offset] == ch) {
+			if (data[i] == ch) {
 				return i;
 			}
 		}
@@ -265,7 +245,7 @@ public final class String implements CharSequence {
 		if (fromIndex < 0) {
 			fromIndex = 0;
 		}
-		for (int i = fromIndex; i < length; i++) {
+		for (int i = fromIndex; i < data.length; i++) {
 			if (startsWith(str, i)) {
 				return i;
 			}
@@ -274,50 +254,52 @@ public final class String implements CharSequence {
 	}
 
 	public String substring(int begin) {
-		if (begin < 0 || begin > length) {
+		if (begin < 0 || begin > data.length) {
 			throw new IndexOutOfBoundsException();
 		} else if (begin == 0) {
 			return this;
 		}
-		return new String(data, offset + begin, length - begin, true);
+		return new String(data, begin, data.length - begin);
 	}
 
 	public String substring(int begin, int end) {
-		if (begin < 0 || end > length || begin > end) {
+		if (begin < 0 || end > data.length || begin > end) {
 			throw new IndexOutOfBoundsException();
+		} else if (begin == 0 && end == data.length) {
+			return this;
 		}
-		return new String(data, offset + begin, end - begin, true);
+		return new String(data, begin, end - begin);
 	}
 
 	public String concat(String str) {
-		if (str.length == 0) {
+		if (str.data.length == 0) {
 			return this;
-		} else if (length == 0) {
+		} else if (data.length == 0) {
 			return str;
 		}
-		char[] out = new char[length + str.length];
-		System.arraycopy(data, offset, out, 0, length);
-		System.arraycopy(str.data, str.offset, out, length, str.length);
-		return new String(out, 0, out.length, true);
+		char[] out = new char[data.length + str.data.length];
+		System.arraycopy(data, 0, out, 0, data.length);
+		System.arraycopy(str.data, 0, out, data.length, str.data.length);
+		return new String(out, true);
 	}
 
 	public String replace(char old, char nchar) {
 		if (indexOf(old) == -1) {
 			return this;
 		} else {
-			char[] narr = new char[length];
-			for (int i = 0; i < length; i++) {
-				char c = data[i + offset];
+			char[] narr = new char[data.length];
+			for (int i = 0; i < data.length; i++) {
+				char c = data[i];
 				narr[i] = c == old ? nchar : c;
 			}
-			return new String(narr, 0, length, true);
+			return new String(narr, true);
 		}
 	}
 
 	public String toLowerCase() {
 		boolean found = false;
-		for (int i = 0; i < length; i++) {
-			char c = data[i + offset];
+		for (int i = 0; i < data.length; i++) {
+			char c = data[i];
 			if (Character.toLowerCase(c) != c) {
 				found = true;
 				break;
@@ -326,17 +308,17 @@ public final class String implements CharSequence {
 		if (!found) {
 			return this;
 		}
-		char[] narr = new char[length];
-		for (int i = 0; i < length; i++) {
-			narr[i] = Character.toLowerCase(data[i + offset]);
+		char[] narr = new char[data.length];
+		for (int i = 0; i < data.length; i++) {
+			narr[i] = Character.toLowerCase(data[i]);
 		}
-		return new String(narr, 0, length, true);
+		return new String(narr, true);
 	}
 
 	public String toUpperCase() {
 		boolean found = false;
-		for (int i = 0; i < length; i++) {
-			char c = data[i + offset];
+		for (int i = 0; i < data.length; i++) {
+			char c = data[i];
 			if (Character.toUpperCase(c) != c) {
 				found = true;
 				break;
@@ -345,16 +327,16 @@ public final class String implements CharSequence {
 		if (!found) {
 			return this;
 		}
-		char[] narr = new char[length];
-		for (int i = 0; i < length; i++) {
-			narr[i] = Character.toUpperCase(data[i + offset]);
+		char[] narr = new char[data.length];
+		for (int i = 0; i < data.length; i++) {
+			narr[i] = Character.toUpperCase(data[i]);
 		}
-		return new String(narr, 0, length, true);
+		return new String(narr, true);
 	}
 
 	public String trim() {
-		int start = offset;
-		int end = offset + length;
+		int start = 0;
+		int end = data.length;
 		while (data[start] <= ' ') {
 			start++;
 			if (start == end) {
@@ -371,8 +353,8 @@ public final class String implements CharSequence {
 	}
 
 	public char[] toCharArray() {
-		char[] out = new char[length];
-		System.arraycopy(data, offset, out, 0, length);
+		char[] out = new char[data.length];
+		System.arraycopy(data, 0, out, 0, data.length);
 		return out;
 	}
 
@@ -393,7 +375,7 @@ public final class String implements CharSequence {
 	}
 
 	public static String valueOf(char c) {
-		return new String(new char[] { c }, 0, 1, true);
+		return new String(new char[] { c }, true);
 	}
 
 	public static String valueOf(int i) {
@@ -414,7 +396,11 @@ public final class String implements CharSequence {
 
 	public native String intern();
 
-	public java.lang.CharSequence subSequence(int start, int end) {
+	public CharSequence subSequence(int start, int end) {
 		return this.substring(start, end);
+	}
+
+	public boolean isEmpty() {
+		return data.length == 0;
 	}
 }
