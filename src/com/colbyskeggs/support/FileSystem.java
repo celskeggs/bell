@@ -1,6 +1,7 @@
 package com.colbyskeggs.support;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class FileSystem {
@@ -12,6 +13,8 @@ public class FileSystem {
 	public static final class FileSystemAttributes {
 		public long total_space, free_space, usable_space;
 	}
+
+	public static final int READ = 0, WRITE = 1, APPEND = 2;
 	
 	// TODO: implement these
 
@@ -60,6 +63,10 @@ public class FileSystem {
 	}
 
 	public static void setExecutable(File file, boolean executable, boolean ownerOnly) throws IOException {
+		throw new IncompleteImplementationError();
+	}
+
+	public static FileImpl open(File file, int how) throws FileNotFoundException {
 		throw new IncompleteImplementationError();
 	}
 }
