@@ -4,15 +4,22 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.net.URL;
 import java.util.ArrayList;
 
 import vm.VMAccess;
 import vm.VMClass;
+import vm.VMDispatch;
 
-public final class Class<T> /* implements Serializable, GenericDeclaration, Type, AnnotatedElement */ {
+public final class Class<T> /*
+							 * implements Serializable, GenericDeclaration,
+							 * Type, AnnotatedElement
+							 */ {
 
 	private final VMClass cls;
 
+	// Referenced indirectly by VMClass
 	private Class(VMClass cls) {
 		this.cls = cls;
 	}
@@ -37,19 +44,23 @@ public final class Class<T> /* implements Serializable, GenericDeclaration, Type
 		throw new IncompleteImplementationError();
 	}
 
-	public static Class<?> forName(String className, boolean initialize, ClassLoader loader) {
+	public static Class<?> forName(String className, boolean initialize, ClassLoader loader)
+			throws ClassNotFoundException {
 		if (className.indexOf('/') != -1) {
 			throw new ClassNotFoundException();
 		}
 		if (className.endsWith("[]")) {
-			return forName(className.substring(0, className.length() - 2), false, loader).getEnclosingArray();
+			return forName(className.substring(0, className.length() - 2), false, loader).cls.getArrayOf()
+					.getRealClass();
 		}
+		Class<?> cls;
 		if (loader == null) {
-			loader = ClassLoader.getBootstrapClassLoader();
+			cls = ClassLoader.findBootstrapClass(className);
+		} else {
+			cls = loader.loadClass(className);
 		}
-		Class<?> cls = loader.loadClass(className);
 		if (initialize) {
-			cls.ensureInitialized();
+			cls.cls.ensureInitialized();
 		}
 		return cls;
 	}
@@ -67,7 +78,7 @@ public final class Class<T> /* implements Serializable, GenericDeclaration, Type
 	}
 
 	public boolean isInterface() {
-		return cls.isInterface();
+		return Modifier.isInterface(cls.getModifiers());
 	}
 
 	public boolean isArray() {
@@ -82,8 +93,10 @@ public final class Class<T> /* implements Serializable, GenericDeclaration, Type
 		return isInterface() && java.lang.annotation.Annotation.class.isAssignableFrom(this);
 	}
 
+	private static final int ACC_SYNTHETIC = 0x1000;
+
 	public boolean isSynthetic() {
-		return cls.isSynthetic();
+		return (cls.getModifiers() & ACC_SYNTHETIC) != 0;
 	}
 
 	public String getName() {
@@ -114,11 +127,15 @@ public final class Class<T> /* implements Serializable, GenericDeclaration, Type
 	// public Type[] getGenericInterfaces() {}
 
 	public Class<?> getComponentType() {
-		return cls.getComponentType();
+		VMClass ct = cls.getComponentType();
+		return ct == null ? null : ct.getRealClass();
 	}
 
+	private static final int MODIFIERS_ALLOWED = Modifier.PUBLIC | Modifier.PROTECTED | Modifier.PRIVATE
+			| Modifier.FINAL | Modifier.STATIC | Modifier.ABSTRACT | Modifier.INTERFACE;
+
 	public int getModifiers() {
-		return cls.getModifiers();
+		return cls.getModifiers() & MODIFIERS_ALLOWED;
 	}
 
 	public Object[] getSigners() {
@@ -194,7 +211,7 @@ public final class Class<T> /* implements Serializable, GenericDeclaration, Type
 			}
 			target = target.getSuperclass();
 		}
-		return methods.toArray(new Field[methods.size()]);
+		return methods.toArray(new Method[methods.size()]);
 	}
 
 	public Constructor<?>[] getConstructors() {
@@ -304,7 +321,8 @@ public final class Class<T> /* implements Serializable, GenericDeclaration, Type
 		}
 		Method m = cls.getMethod(name, params);
 		if (m == null) {
-			throw new NoSuchMethodException("no such method " + name + " on " + this.getName() + " with given parameters");
+			throw new NoSuchMethodException(
+					"no such method " + name + " on " + this.getName() + " with given parameters");
 		}
 		return m;
 	}
@@ -320,7 +338,7 @@ public final class Class<T> /* implements Serializable, GenericDeclaration, Type
 		}
 		return (Constructor<T>) c;
 	}
-	
+
 	private String convertResource(String name) {
 		if (name.startsWith("/")) {
 			return name.substring(1);
@@ -343,14 +361,14 @@ public final class Class<T> /* implements Serializable, GenericDeclaration, Type
 		return this.getClassLoader().getResource(convertResource(name));
 	}
 
-	// public ProtectionDomain getProtectionDomain() {}
-
 	public boolean desiredAssertionStatus() {
 		return this.getClassLoader().getDesiredAssertionStatus(this.getName());
 	}
 
+	private static final int ACC_ENUM = 0x4000;
+
 	public boolean isEnum() {
-		return cls.isEnum();
+		return (cls.getModifiers() & ACC_ENUM) != 0;
 	}
 
 	public T[] getEnumConstants() {

@@ -1,6 +1,6 @@
 package java.util;
 
-import com.colbyskeggs.support.EnumerationAdapter;
+import com.celskeggs.support.EnumerationAdapter;
 
 public class Hashtable<K, V> extends Dictionary<K, V>
 		implements Map<K, V> /* , Cloneable, Serializable */ {

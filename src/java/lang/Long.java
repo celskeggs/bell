@@ -95,4 +95,32 @@ public final class Long extends Number {
 			return 0;
 		}
 	}
+
+	public static long parseLong(String s, int radix) {
+		// TODO: edge cases
+		if (s == null || s.length() == 0 || s.equals("-") || radix < Character.MIN_RADIX
+				|| radix > Character.MAX_RADIX) {
+			throw new NumberFormatException();
+		}
+		boolean neg = false;
+		int i = 0;
+		if (s.charAt(0) == '-') {
+			i = 1;
+			neg = true;
+		}
+		long out = 0;
+		for (; i < s.length(); i++) {
+			int val = Character.digit(s.charAt(i), radix);
+			if (val < 0 || val >= radix) {
+				throw new NumberFormatException();
+			}
+			out *= radix;
+			out += val;
+		}
+		return neg ? -out : out;
+	}
+
+	public static long parseLong(String value) {
+		return parseLong(value, 10);
+	}
 }

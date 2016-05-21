@@ -1,7 +1,7 @@
 package java.util;
 
-import com.colbyskeggs.support.CUtil;
-import com.colbyskeggs.support.EnumerationAdapter;
+import com.celskeggs.support.CUtil;
+import com.celskeggs.support.EnumerationAdapter;
 
 public class Vector<E> extends AbstractList<E>
 		implements RandomAccess /* , Cloneable, Serializable */ {
@@ -193,8 +193,11 @@ public class Vector<E> extends AbstractList<E>
 	}
 
 	public synchronized <T> T[] toArray(T[] a) {
-		T[] n = CUtil.copyOfType(a, elementCount);
+		T[] n = a.length >= elementCount ? a : CUtil.copyOfType(a, elementCount);
 		System.arraycopy(elementData, 0, n, 0, elementCount);
+		if (a.length > elementCount) {
+			n[elementCount] = null;
+		}
 		return n;
 	}
 

@@ -6,8 +6,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.colbyskeggs.support.FileSystem;
-import com.colbyskeggs.support.FileSystem.Attributes;
+import com.celskeggs.support.FileSystem;
+import com.celskeggs.support.FileSystem.Attributes;
 
 public class File implements Comparable<File> /* , Serializable */ {
 

@@ -38,7 +38,7 @@ public final class Integer extends Number {
 		if (negative) {
 			out[--ci] = '-';
 		}
-		return new String(out, ci, 12 - ci, true);
+		return new String(out, ci, 12 - ci);
 	}
 
 	public static String toHexString(int i) {
@@ -51,7 +51,7 @@ public final class Integer extends Number {
 			out[--ci] = digits[i & 15];
 			i = i >> 4;
 		}
-		return new String(out, ci, 12 - ci, true);
+		return new String(out, ci, 12 - ci);
 	}
 
 	public static String toOctalString(int i) {
@@ -83,6 +83,7 @@ public final class Integer extends Number {
 	}
 
 	public static int parseInt(String s, int radix) throws NumberFormatException {
+		// TODO: edge cases
 		if (s == null || s.length() == 0 || s.equals("-") || radix < Character.MIN_RADIX
 				|| radix > Character.MAX_RADIX) {
 			throw new NumberFormatException();

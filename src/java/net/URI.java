@@ -6,4 +6,8 @@ public class URI implements Comparable<URI> /* , Serializable */ {
 	public URL toURL() throws MalformedURLException {
 		throw new IncompleteImplementationError();
 	}
+
+	public int compareTo(URI o) {
+		throw new IncompleteImplementationError();
+	}
 }

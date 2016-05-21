@@ -403,4 +403,8 @@ public final class String implements CharSequence {
 	public boolean isEmpty() {
 		return data.length == 0;
 	}
+
+	public static String format(String format, Object... args) {
+		throw new IncompleteImplementationError();
+	}
 }

@@ -1,6 +1,6 @@
 package java.util;
 
-import com.colbyskeggs.support.CUtil;
+import com.celskeggs.support.CUtil;
 
 public class ArrayList<E> extends AbstractList<E>
 		implements List<E>, RandomAccess /* , Cloneable, Serializable */ {
@@ -85,6 +85,7 @@ public class ArrayList<E> extends AbstractList<E>
 	}
 
 	public <T> T[] toArray(T[] a) {
+		// TODO: reuse the existing array
 		T[] n = CUtil.copyOfType(a, length);
 		System.arraycopy(contents, 0, n, 0, length);
 		return n;

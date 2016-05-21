@@ -33,8 +33,6 @@ package vm;
 
 public class VMDispatch {
 
-	static final int FLAG_INTERFACE = 0x1;
-
 	static final int STRING_TABLE_POINTER_OFFSET = 8;
 	static final int STRING_TABLE_LENGTH_OFFSET = 12;
 	static final int CLASS_TABLE_POINTER_OFFSET = 16;
@@ -59,10 +57,6 @@ public class VMDispatch {
 			bytes[i] = VMNatives.getCodeByte(sptr + i);
 		}
 		return globalStrings[id] = new String(bytes);
-	}
-
-	public static int resolveVirtual(int classid, int namedesc) {
-
 	}
 
 	public static Object rawNewObject(int classid) {

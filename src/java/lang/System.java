@@ -1,13 +1,15 @@
 package java.lang;
 
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
 import java.io.PrintStream;
 
 import vm.VMStandardOutputStream;
 
 public final class System {
 
-	public static final PrintStream out = new PrintStream(new VMStandardOutputStream(false));
-	public static final PrintStream err = new PrintStream(new VMStandardOutputStream(true));
+	public static final PrintStream out = new PrintStream(new FileOutputStream(FileDescriptor.out));
+	public static final PrintStream err = new PrintStream(new FileOutputStream(FileDescriptor.err));
 
 	public static native int identityHashCode(Object aThis);
 

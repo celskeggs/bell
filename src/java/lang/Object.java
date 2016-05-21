@@ -10,7 +10,7 @@ public class Object {
 	public Object() {
 	}
 
-	public final native Class getClass();
+	public final native Class<?> getClass();
 
 	public int hashCode() {
 		return System.identityHashCode(this);

@@ -1,6 +1,6 @@
 package java.util;
 
-import com.colbyskeggs.support.CUtil;
+import com.celskeggs.support.CUtil;
 
 public class Arrays {
 

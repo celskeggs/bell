@@ -206,19 +206,9 @@ public class PrintWriter extends Writer {
 		return this;
 	}
 
-	public PrintWriter printf(Locale l, String format, Object... args) {
-		this.format(l, format, args);
-		return this;
-	}
-
 	public PrintWriter format(String format, Object... args) {
-		this.format(Locale.getDefault(), format, args);
-		return this;
-	}
-
-	public PrintWriter format(Locale l, String format, Object... args) {
 		// TODO: optimize
-		write(String.format(l, format, args));
+		write(String.format(format, args));
 		if (autoFlush) {
 			flush();
 		}

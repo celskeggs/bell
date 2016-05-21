@@ -29,7 +29,7 @@ public final class Character {
 	}
 
 	public String toString() {
-		return new String(new char[] { value }, 0, 1, true);
+		return new String(new char[] { value }, true);
 	}
 
 	public static boolean isLowerCase(char ch) {

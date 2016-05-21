@@ -2,6 +2,7 @@ package vm;
 
 public class VMAccess {
 
+	// TODO: should this exist?
 	public static Class getClassByName(String className) {
 		VMClass vmc = getVMClassByName(className);
 		return vmc == null ? null : vmc.getRealClass();

@@ -1,6 +1,6 @@
 package java.io;
 
-import com.colbyskeggs.support.FileSystem;
+import com.celskeggs.support.FileSystem;
 
 public class FileInputStream extends InputStream {
 
