@@ -11,7 +11,8 @@ final class ArrayDoubleBuffer extends DoubleBuffer {
 		read_only = false;
 	}
 
-	private ArrayDoubleBuffer(double[] array, int array_offset, int capacity, int position, int limit, boolean read_only) {
+	private ArrayDoubleBuffer(double[] array, int array_offset, int capacity, int position, int limit,
+			boolean read_only) {
 		super(capacity, array, array_offset);
 		this.position = position;
 		this.limit = limit;

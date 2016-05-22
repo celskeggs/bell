@@ -12,7 +12,8 @@ final class ViewCharBuffer extends CharBuffer {
 		this.read_only = read_only;
 	}
 
-	private ViewCharBuffer(byte[] array, int array_offset, int capacity, int position, int limit, ByteOrder order, boolean read_only) {
+	private ViewCharBuffer(byte[] array, int array_offset, int capacity, int position, int limit, ByteOrder order,
+			boolean read_only) {
 		super(capacity, null, array_offset);
 		this.byte_array = array;
 		this.order = order;
@@ -39,7 +40,8 @@ final class ViewCharBuffer extends CharBuffer {
 			throw new IndexOutOfBoundsException();
 		}
 		// TODO: is mark behavior correct?
-		CharBuffer b = new ViewCharBuffer(byte_array, array_offset, capacity, position + start, position + end, order, read_only);
+		CharBuffer b = new ViewCharBuffer(byte_array, array_offset, capacity, position + start, position + end, order,
+				read_only);
 		b.mark = mark;
 		return b;
 	}

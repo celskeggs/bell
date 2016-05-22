@@ -285,8 +285,7 @@ public class Collections {
 
 			@Override
 			public boolean equals(Object o) {
-				return o instanceof Map.Entry
-						&& Objects.equals(getKey(), ((Map.Entry<?, ?>) o).getKey())
+				return o instanceof Map.Entry && Objects.equals(getKey(), ((Map.Entry<?, ?>) o).getKey())
 						&& Objects.equals(getValue(), ((Map.Entry<?, ?>) o).getValue());
 			}
 		};
@@ -559,7 +558,7 @@ public class Collections {
 			}
 		};
 	}
-	
+
 	public static <T> List<T> unmodifiableList(final List<? extends T> list) {
 		return new List<T>() {
 			public boolean add(T e) {

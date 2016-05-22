@@ -309,7 +309,7 @@ public abstract class VMClass {
 		public int getModifiers() {
 			return VMAccess.getVMClassFlags(id);
 		}
-		
+
 		@Override
 		public ClassLoader getClassLoader() {
 			return null; // bootstrap class

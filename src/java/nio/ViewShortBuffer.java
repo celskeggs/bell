@@ -12,7 +12,8 @@ final class ViewShortBuffer extends ShortBuffer {
 		this.read_only = read_only;
 	}
 
-	private ViewShortBuffer(byte[] array, int array_offset, int capacity, int position, int limit, ByteOrder order, boolean read_only) {
+	private ViewShortBuffer(byte[] array, int array_offset, int capacity, int position, int limit, ByteOrder order,
+			boolean read_only) {
 		super(capacity, null, array_offset);
 		this.byte_array = array;
 		this.order = order;

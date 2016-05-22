@@ -1,6 +1,7 @@
 package java.lang;
 
-public abstract class Enum<E extends Enum<E>> implements Comparable<E> /*, Serializable */ {
+public abstract class Enum<E extends Enum<E>>
+		implements Comparable<E> /* , Serializable */ {
 
 	private final int ordinal;
 	private final String name;

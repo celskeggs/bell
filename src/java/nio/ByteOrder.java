@@ -63,7 +63,7 @@ public final class ByteOrder {
 			array[i + 1] = (byte) (value >> 16);
 			array[i + 2] = (byte) (value >> 8);
 			array[i + 3] = (byte) value;
-		}		
+		}
 	}
 
 	long getLong(byte[] array, int i) {

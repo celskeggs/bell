@@ -96,7 +96,8 @@ final class SequenceCharBuffer extends CharBuffer {
 			throw new IndexOutOfBoundsException();
 		}
 		// TODO: something more efficient?
-		seq.subSequence(array_offset + position, array_offset + position + length).toString().getChars(0, length, dst, offset);
+		seq.subSequence(array_offset + position, array_offset + position + length).toString().getChars(0, length, dst,
+				offset);
 		position += length;
 		return this;
 	}
@@ -107,7 +108,8 @@ final class SequenceCharBuffer extends CharBuffer {
 			throw new BufferUnderflowException();
 		}
 		// TODO: something more efficient?
-		seq.subSequence(array_offset + position, array_offset + position + dst.length).toString().getChars(0, dst.length, dst, 0);
+		seq.subSequence(array_offset + position, array_offset + position + dst.length).toString().getChars(0,
+				dst.length, dst, 0);
 		position += dst.length;
 		return this;
 	}

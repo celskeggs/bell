@@ -225,7 +225,8 @@ public abstract class ClassLoader {
 		String loader = System.getProperty("java.system.class.loader");
 		if (loader != null && !loader.isEmpty()) {
 			try {
-				cl = cl.loadClass(loader).getConstructor(ClassLoader.class).newInstance(cl);
+				cl = cl.loadClass(loader).asSubclass(ClassLoader.class).getConstructor(ClassLoader.class)
+						.newInstance(cl);
 			} catch (Throwable thr) {
 				throw new Error("Cannot construct system class loader", thr);
 			}

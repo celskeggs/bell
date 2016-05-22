@@ -21,7 +21,7 @@ public class CUtil {
 			}
 		};
 	}
-	
+
 	public static <T> Enumeration<T> concatEnumerations(final Enumeration<T> a, final Enumeration<T> b) {
 		if (!a.hasMoreElements()) {
 			return b;

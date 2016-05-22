@@ -3,6 +3,7 @@ package java.lang;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
@@ -131,8 +132,7 @@ public final class Class<T> /*
 		return ct == null ? null : ct.getRealClass();
 	}
 
-	private static final int MODIFIERS_ALLOWED = Modifier.PUBLIC | Modifier.PROTECTED | Modifier.PRIVATE
-			| Modifier.FINAL | Modifier.STATIC | Modifier.ABSTRACT | Modifier.INTERFACE;
+	private static final int MODIFIERS_ALLOWED = (Modifier.classModifiers() & ~Modifier.STRICT) | Modifier.INTERFACE;
 
 	public int getModifiers() {
 		return cls.getModifiers() & MODIFIERS_ALLOWED;
@@ -190,7 +190,7 @@ public final class Class<T> /*
 		while (target != null) {
 			Field[] decl = target.getDeclaredFields();
 			for (Field f : decl) {
-				if (f.isPublic()) {
+				if (Modifier.isPublic(f.getModifiers())) {
 					fields.add(f);
 				}
 			}
@@ -205,7 +205,7 @@ public final class Class<T> /*
 		while (target != null) {
 			Method[] decl = target.getDeclaredMethods();
 			for (Method m : decl) {
-				if (m.isPublic()) {
+				if (Modifier.isPublic(m.getModifiers())) {
 					methods.add(m);
 				}
 			}
@@ -218,14 +218,14 @@ public final class Class<T> /*
 		Constructor<?>[] cstr = getDeclaredConstructors();
 		int total = 0;
 		for (int i = 0; i < cstr.length; i++) {
-			if (cstr[i].isPublic()) {
+			if (Modifier.isPublic(cstr[i].getModifiers())) {
 				total++;
 			}
 		}
 		Constructor<?>[] out = new Constructor<?>[total];
 		int j = 0;
 		for (int i = 0; i < cstr.length; i++) {
-			if (cstr[i].isPublic()) {
+			if (Modifier.isPublic(cstr[i].getModifiers())) {
 				out[j++] = cstr[i];
 			}
 		}
@@ -239,7 +239,7 @@ public final class Class<T> /*
 		VMClass target = this.cls;
 		while (target != null) {
 			Field f = target.getField(name);
-			if (f != null && f.isPublic()) {
+			if (f != null && Modifier.isPublic(f.getModifiers())) {
 				return f;
 			}
 			target = target.getSuperClass();
@@ -261,7 +261,7 @@ public final class Class<T> /*
 		VMClass target = this.cls;
 		while (target != null) {
 			Method m = target.getMethod(name, params);
-			if (m != null && m.isPublic()) {
+			if (m != null && Modifier.isPublic(m.getModifiers())) {
 				return m;
 			}
 			target = target.getSuperClass();
@@ -373,7 +373,11 @@ public final class Class<T> /*
 
 	public T[] getEnumConstants() {
 		if (isEnum()) {
-			return (T[]) this.getMethod("values").invoke(null);
+			try {
+				return (T[]) this.getMethod("values").invoke(null);
+			} catch (Exception e) {
+				return null;
+			}
 		} else {
 			return null;
 		}

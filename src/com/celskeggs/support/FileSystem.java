@@ -9,19 +9,19 @@ public class FileSystem {
 		public boolean readable, writable, executable, directory, file, hidden;
 		public long lastModified, length;
 	}
-	
+
 	public static final class FileSystemAttributes {
 		public long total_space, free_space, usable_space;
 	}
 
 	public static final int READ = 0, WRITE = 1, APPEND = 2;
-	
+
 	// TODO: implement these
 
 	public static Attributes attributes(File file) {
 		throw new IncompleteImplementationError();
 	}
-	
+
 	public static FileSystemAttributes fsAttributes(File file) throws IOException {
 		throw new IncompleteImplementationError();
 	}

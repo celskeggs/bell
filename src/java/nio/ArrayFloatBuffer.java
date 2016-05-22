@@ -11,7 +11,8 @@ final class ArrayFloatBuffer extends FloatBuffer {
 		read_only = false;
 	}
 
-	private ArrayFloatBuffer(float[] array, int array_offset, int capacity, int position, int limit, boolean read_only) {
+	private ArrayFloatBuffer(float[] array, int array_offset, int capacity, int position, int limit,
+			boolean read_only) {
 		super(capacity, array, array_offset);
 		this.position = position;
 		this.limit = limit;

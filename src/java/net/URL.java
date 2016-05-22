@@ -13,7 +13,7 @@ public final class URL /* implements Serializable */ {
 	// TODO: allow setting this up
 	private static URLStreamHandlerFactory factory = null;
 	private final URLStreamHandler handler;
-	
+
 	public static synchronized void setURLStreamHandlerFactory(URLStreamHandlerFactory fac) {
 		if (factory != null) {
 			throw new Error("Factory already set!");
@@ -105,8 +105,8 @@ public final class URL /* implements Serializable */ {
 	public final InputStream openStream() throws IOException {
 		return openConnection().getInputStream();
 	}
-	
+
 	// TODO: do equals (and others) using URLStreamHandler.equals (and others)
-	
+
 	// TODO: the rest of the methods
 }

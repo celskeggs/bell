@@ -437,7 +437,8 @@ public class File implements Comparable<File> /* , Serializable */ {
 
 	private static synchronized long getTemp() {
 		if (next_temp < 0) {
-			// in rare cases, we might break the "only once" contract, but it's better than crashing
+			// in rare cases, we might break the "only once" contract, but it's
+			// better than crashing
 			next_temp = 0;
 		}
 		return next_temp++;
@@ -467,11 +468,11 @@ public class File implements Comparable<File> /* , Serializable */ {
 	public static File createTempFile(String prefix, String suffix) throws IOException {
 		return createTempFile(prefix, suffix, null);
 	}
-	
+
 	public int compareTo(File pathname) {
 		return getPath().compareTo(pathname.getPath());
 	}
-	
+
 	public boolean equals(Object obj) {
 		if (obj instanceof File) {
 			File f = (File) obj;
@@ -480,14 +481,14 @@ public class File implements Comparable<File> /* , Serializable */ {
 			return false;
 		}
 	}
-	
+
 	public int hashCode() {
 		return getPath().hashCode() ^ 1234321;
 	}
-	
+
 	public String toString() {
 		return getPath();
 	}
-	
+
 	// public Path toPath() {} TODO
 }

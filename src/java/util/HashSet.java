@@ -126,7 +126,7 @@ public class HashSet<E>
 		count++;
 		return true;
 	}
-	
+
 	public boolean remove(Object o) {
 		int bucket = bucketFor(o);
 		LinkedEntry<E> ent = entries[bucket];
@@ -146,12 +146,12 @@ public class HashSet<E>
 		}
 		return false;
 	}
-	
+
 	public void clear() {
 		for (int i = 0; i < entries.length; i++) {
 			entries[i] = null;
 		}
 	}
-	
+
 	// public Object clone() TODO
 }

@@ -22,7 +22,7 @@ public class OutputStreamWriter extends Writer {
 		if (closed) {
 			throw new IOException("OutputStreamWriter is already closed!");
 		}
-		this.write(new char[] {(char) c}, 0, 1);
+		this.write(new char[] { (char) c }, 0, 1);
 	}
 
 	@Override

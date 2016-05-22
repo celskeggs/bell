@@ -15,11 +15,11 @@ public class Modifier {
 	public static final int VOLATILE = 64;
 
 	public static int classModifiers() {
-		return PUBLIC | FINAL | INTERFACE | ABSTRACT | STATIC | FINAL | STRICT;
+		return PUBLIC | PROTECTED | PRIVATE | ABSTRACT | STATIC | FINAL | STRICT;
 	}
 
 	public static int interfaceModifiers() {
-		return PUBLIC | FINAL | INTERFACE | ABSTRACT | STATIC | STRICT;
+		return PUBLIC | PROTECTED | PRIVATE | ABSTRACT | STATIC | STRICT;
 	}
 
 	public static int constructorModifiers() {
@@ -90,7 +90,8 @@ public class Modifier {
 		if (mod == 0) {
 			return "";
 		}
-		// public protected private abstract static final transient volatile synchronized native strictfp interface 
+		// public protected private abstract static final transient volatile
+		// synchronized native strictfp interface
 		StringBuilder sb = new StringBuilder();
 		if ((mod & PUBLIC) != 0) {
 			sb.append("public ");

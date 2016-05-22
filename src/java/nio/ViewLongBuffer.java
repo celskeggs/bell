@@ -12,7 +12,8 @@ final class ViewLongBuffer extends LongBuffer {
 		this.read_only = read_only;
 	}
 
-	private ViewLongBuffer(byte[] array, int array_offset, int capacity, int position, int limit, ByteOrder order, boolean read_only) {
+	private ViewLongBuffer(byte[] array, int array_offset, int capacity, int position, int limit, ByteOrder order,
+			boolean read_only) {
 		super(capacity, null, array_offset);
 		this.byte_array = array;
 		this.order = order;

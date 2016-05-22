@@ -224,7 +224,7 @@ public class PrintWriter extends Writer {
 		write(csq.subSequence(start, end).toString());
 		return this;
 	}
-	
+
 	public PrintWriter append(char c) {
 		write(c);
 		return this;
