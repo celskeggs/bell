@@ -16,9 +16,17 @@ public final class System {
 	private System() {
 	}
 
-	public static native long currentTimeMillis();
+	public static long currentTimeMillis() {
+		throw new IncompleteImplementationError();
+	}
 
-	public static native void arraycopy(Object src, int srcOffset, Object dst, int dstOffset, int length);
+	public static long nanoTime() {
+		throw new IncompleteImplementationError();
+	}
+
+	public static void arraycopy(Object src, int srcOffset, Object dst, int dstOffset, int length) {
+		throw new IncompleteImplementationError();
+	}
 
 	public static String getProperty(String key) {
 		if (key == null) {
