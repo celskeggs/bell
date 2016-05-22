@@ -1,6 +1,10 @@
 package java.lang;
 
+import vm.VMClass;
+
 public final class Double extends Number {
+
+	public static final Class<?> TYPE = VMClass.DOUBLE.getRealClass();
 
 	private final double value;
 

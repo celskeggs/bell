@@ -14,7 +14,11 @@ public abstract class VMClass {
 	public static final VMClass BYTE = null;
 	public static final VMClass CHAR = null;
 	public static final VMClass INT = null;
+	public static final VMClass LONG = null;
+	public static final VMClass DOUBLE = null;
+	public static final VMClass FLOAT = null;
 	public static final VMClass SHORT = null;
+	public static final VMClass VOID = null;
 
 	private Class<?> realClass;
 

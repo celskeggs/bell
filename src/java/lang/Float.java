@@ -1,6 +1,10 @@
 package java.lang;
 
+import vm.VMClass;
+
 public final class Float extends Number {
+
+	public static final Class<?> TYPE = VMClass.FLOAT.getRealClass();
 
 	private final float value;
 

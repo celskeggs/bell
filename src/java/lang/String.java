@@ -253,6 +253,22 @@ public final class String implements CharSequence {
 		return -1;
 	}
 
+	public int lastIndexOf(String str) {
+		return lastIndexOf(str, data.length - str.length());
+	}
+
+	public int lastIndexOf(String str, int fromIndex) {
+		if (fromIndex >= data.length) {
+			fromIndex = data.length - 1;
+		}
+		for (int i = fromIndex; i >= 0; i--) {
+			if (startsWith(str, i)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	public String substring(int begin) {
 		if (begin < 0 || begin > data.length) {
 			throw new IndexOutOfBoundsException();

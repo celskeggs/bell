@@ -96,4 +96,31 @@ public final class Character {
 		 */
 		return isLetter(ch) || ch == '$' || ch == '_' || isDigit(ch) || isIdentifierIgnorable(ch);
 	}
+
+	public static boolean isJavaIdentifierStart(char ch) {
+		// TODO complete this properly
+		return isLetter(ch) || ch == '$' || ch == '_' || isDigit(ch);
+	}
+
+	public static boolean isLetterOrDigit(char ch) {
+		return isLetter(ch) || isDigit(ch);
+	}
+
+	public static boolean isWhitespace(char ch) {
+		// TODO complete this properly
+		switch (ch) {
+		case ' ':
+		case '\n':
+		case '\t':
+		case '\r':
+		case '\f':
+		case '\u001C':
+		case '\u001D':
+		case '\u001E':
+		case '\u001F':
+			return true;
+		default:
+			return false;
+		}
+	}
 }

@@ -1,6 +1,10 @@
 package java.lang;
 
+import vm.VMClass;
+
 public final class Long extends Number {
+
+	public static final Class<?> TYPE = VMClass.LONG.getRealClass();
 
 	public static final int SIZE = 64;
 	public static final long MAX_VALUE = 9223372036854775807L;

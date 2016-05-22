@@ -2,6 +2,7 @@ package java.lang;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.Arrays;
 
 import vm.VMNatives;
@@ -147,10 +148,13 @@ public class Throwable {
 		}
 	}
 
-	/*
-	 * TODO public void printStackTrace(PrintWriter pstr) {
-	 * this.printStackTraceInternal(pstr); }
-	 */
+	public void printStackTrace(PrintWriter pstr) {
+		try {
+			this.printStackTraceInternal(0, pstr, null);
+		} catch (IOException e) {
+			throw new RuntimeException("Unexpected IOException while printing stack trace.");
+		}
+	}
 
 	private static void indent(int indent, Appendable pstr) throws IOException {
 		for (int i = 0; i < indent; i++) {
