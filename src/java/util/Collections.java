@@ -58,16 +58,8 @@ public class Collections {
 	}
 
 	public static final <T> Set<T> emptySet() {
-		return new Set<T>() {
+		return new AbstractSet<T>() {
 			public boolean add(T e) {
-				throw new UnsupportedOperationException("Immutable set");
-			}
-
-			public boolean addAll(Collection<? extends T> c) {
-				throw new UnsupportedOperationException("Immutable set");
-			}
-
-			public void clear() {
 				throw new UnsupportedOperationException("Immutable set");
 			}
 
@@ -79,23 +71,11 @@ public class Collections {
 				return c.isEmpty();
 			}
 
-			public boolean isEmpty() {
-				return true;
-			}
-
 			public Iterator<T> iterator() {
 				return emptyIterator();
 			}
 
 			public boolean remove(Object o) {
-				throw new UnsupportedOperationException("Immutable set");
-			}
-
-			public boolean removeAll(Collection<?> c) {
-				throw new UnsupportedOperationException("Immutable set");
-			}
-
-			public boolean retainAll(Collection<?> c) {
 				throw new UnsupportedOperationException("Immutable set");
 			}
 
@@ -307,16 +287,8 @@ public class Collections {
 
 			public Set<java.util.Map.Entry<K, V>> entrySet() {
 				final Set<?> entrySet = m.entrySet();
-				return new Set<Map.Entry<K, V>>() {
+				return new AbstractSet<Map.Entry<K, V>>() {
 					public boolean add(java.util.Map.Entry<K, V> e) {
-						throw new UnsupportedOperationException("Immutable map");
-					}
-
-					public boolean addAll(Collection<? extends java.util.Map.Entry<K, V>> c) {
-						throw new UnsupportedOperationException("Immutable map");
-					}
-
-					public void clear() {
 						throw new UnsupportedOperationException("Immutable map");
 					}
 
@@ -350,14 +322,6 @@ public class Collections {
 					}
 
 					public boolean remove(Object o) {
-						throw new UnsupportedOperationException("Immutable map");
-					}
-
-					public boolean removeAll(Collection<?> c) {
-						throw new UnsupportedOperationException("Immutable map");
-					}
-
-					public boolean retainAll(Collection<?> c) {
 						throw new UnsupportedOperationException("Immutable map");
 					}
 
@@ -422,12 +386,8 @@ public class Collections {
 	}
 
 	public static <T> Set<T> unmodifiableSet(final Set<? extends T> s) {
-		return new Set<T>() {
+		return new AbstractSet<T>() {
 			public boolean add(T e) {
-				throw new UnsupportedOperationException("Immutable set");
-			}
-
-			public boolean addAll(Collection<? extends T> c) {
 				throw new UnsupportedOperationException("Immutable set");
 			}
 
@@ -465,14 +425,6 @@ public class Collections {
 			}
 
 			public boolean remove(Object o) {
-				throw new UnsupportedOperationException("Immutable set");
-			}
-
-			public boolean removeAll(Collection<?> c) {
-				throw new UnsupportedOperationException("Immutable set");
-			}
-
-			public boolean retainAll(Collection<?> c) {
 				throw new UnsupportedOperationException("Immutable set");
 			}
 
@@ -701,6 +653,14 @@ public class Collections {
 
 			public List<T> subList(int fromIndex, int toIndex) {
 				return unmodifiableList(list.subList(fromIndex, toIndex));
+			}
+		};
+	}
+
+	public static <T> Comparator<T> reverseOrder(final Comparator<T> comparator) {
+		return new Comparator<T>() {
+			public int compare(T o1, T o2) {
+				return -comparator.compare(o1, o2);
 			}
 		};
 	}
