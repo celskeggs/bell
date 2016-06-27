@@ -1,5 +1,7 @@
 package java.io;
 
+import com.celskeggs.support.IncompleteImplementationError;
+
 public class BufferedInputStream extends FilterInputStream {
 	protected volatile byte[] buf;
 	protected int count;

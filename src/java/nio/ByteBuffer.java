@@ -1,5 +1,7 @@
 package java.nio;
 
+import com.celskeggs.support.IncompleteImplementationError;
+
 public abstract class ByteBuffer extends Buffer implements Comparable<ByteBuffer> {
 
 	final byte[] array;

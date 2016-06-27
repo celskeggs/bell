@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.celskeggs.net.www.ContentTypes;
+import com.celskeggs.support.IncompleteImplementationError;
 
 public abstract class URLConnection {
 	protected URL url;

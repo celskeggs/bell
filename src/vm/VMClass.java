@@ -5,6 +5,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import com.celskeggs.support.IncompleteImplementationError;
+
 public abstract class VMClass {
 	// TODO: find this somehow
 	private static final int ALLOCATE_CLASS_FOR_VMCLASS_METHOD_ID = -1;

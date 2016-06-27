@@ -1,6 +1,9 @@
 package java.lang;
 
 import java.io.UnsupportedEncodingException;
+
+import com.celskeggs.support.IncompleteImplementationError;
+
 import vm.CharacterCoder;
 
 public final class String implements CharSequence {

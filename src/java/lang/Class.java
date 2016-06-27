@@ -9,6 +9,8 @@ import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
 
+import com.celskeggs.support.IncompleteImplementationError;
+
 import vm.VMAccess;
 import vm.VMClass;
 import vm.VMDispatch;

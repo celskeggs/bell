@@ -4,6 +4,8 @@ import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
+import com.celskeggs.support.IncompleteImplementationError;
+
 import vm.VMStandardOutputStream;
 
 public final class System {

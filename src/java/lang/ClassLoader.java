@@ -8,6 +8,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 
 import com.celskeggs.support.CUtil;
+import com.celskeggs.support.IncompleteImplementationError;
 
 import vm.VMAccess;
 

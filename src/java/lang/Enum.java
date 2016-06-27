@@ -1,5 +1,7 @@
 package java.lang;
 
+import com.celskeggs.support.IncompleteImplementationError;
+
 public abstract class Enum<E extends Enum<E>>
 		implements Comparable<E> /* , Serializable */ {
 

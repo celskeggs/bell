@@ -1,5 +1,7 @@
 package java.util;
 
+import com.celskeggs.support.IncompleteImplementationError;
+
 public class HashMap<K, V> extends AbstractMap<K, V> {
 
 	private static final class LinkedEntry<K, V> extends SimpleEntry<K, V> {

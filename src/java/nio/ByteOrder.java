@@ -1,5 +1,7 @@
 package java.nio;
 
+import com.celskeggs.support.IncompleteImplementationError;
+
 public final class ByteOrder {
 	public static final ByteOrder BIG_ENDIAN = new ByteOrder();
 	public static final ByteOrder LITTLE_ENDIAN = new ByteOrder();

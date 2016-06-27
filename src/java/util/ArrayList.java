@@ -1,6 +1,7 @@
 package java.util;
 
 import com.celskeggs.support.CUtil;
+import com.celskeggs.support.IncompleteImplementationError;
 
 public class ArrayList<E> extends AbstractList<E>
 		implements List<E>, RandomAccess /* , Cloneable, Serializable */ {

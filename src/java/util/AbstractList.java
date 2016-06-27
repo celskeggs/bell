@@ -1,5 +1,7 @@
 package java.util;
 
+import com.celskeggs.support.IncompleteImplementationError;
+
 public abstract class AbstractList<E> extends AbstractCollection<E> implements List<E> {
 	private class AbstractIterator implements ListIterator<E> {
 		int i = 0;

@@ -2,6 +2,8 @@ package java.net;
 
 import java.io.IOException;
 
+import com.celskeggs.support.IncompleteImplementationError;
+
 public abstract class URLStreamHandler {
 	protected abstract URLConnection openConnection(URL u) throws IOException;
 

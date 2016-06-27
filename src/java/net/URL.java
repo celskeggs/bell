@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import com.celskeggs.net.protocols.Protocols;
 import com.celskeggs.support.CUtil;
+import com.celskeggs.support.IncompleteImplementationError;
 
 public final class URL /* implements Serializable */ {
 

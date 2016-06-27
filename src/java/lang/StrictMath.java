@@ -1,5 +1,7 @@
 package java.lang;
 
+import com.celskeggs.support.IncompleteImplementationError;
+
 // TODO: see docs for implementation requirements
 public class StrictMath {
 

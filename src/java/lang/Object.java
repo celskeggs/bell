@@ -1,5 +1,7 @@
 package java.lang;
 
+import com.celskeggs.support.IncompleteImplementationError;
+
 public class Object {
 
 	int classpointer; // required to be here by C code

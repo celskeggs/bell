@@ -1,5 +1,7 @@
 package java.lang;
 
+import com.celskeggs.support.IncompleteImplementationError;
+
 import vm.VMClass;
 
 public final class Double extends Number {

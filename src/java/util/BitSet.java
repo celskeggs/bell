@@ -3,6 +3,8 @@ package java.util;
 import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
 
+import com.celskeggs.support.IncompleteImplementationError;
+
 public class BitSet /* implements Serializable, Clonable */ {
 
 	// each long contains 64 bits: see Long.SIZE

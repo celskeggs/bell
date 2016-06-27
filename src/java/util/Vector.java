@@ -2,6 +2,7 @@ package java.util;
 
 import com.celskeggs.support.CUtil;
 import com.celskeggs.support.EnumerationAdapter;
+import com.celskeggs.support.IncompleteImplementationError;
 
 public class Vector<E> extends AbstractList<E>
 		implements RandomAccess /* , Cloneable, Serializable */ {

@@ -1,5 +1,7 @@
 package java.net;
 
+import com.celskeggs.support.IncompleteImplementationError;
+
 public class URI implements Comparable<URI> /* , Serializable */ {
 	// TODO
 

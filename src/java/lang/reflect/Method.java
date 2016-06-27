@@ -2,6 +2,8 @@ package java.lang.reflect;
 
 import java.util.Arrays;
 
+import com.celskeggs.support.IncompleteImplementationError;
+
 public final class Method extends Executable {
 	private final Class<?> parent;
 	private final String name;

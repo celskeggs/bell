@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import com.celskeggs.support.FileSystem;
 import com.celskeggs.support.FileSystem.Attributes;
+import com.celskeggs.support.IncompleteImplementationError;
 
 public class File implements Comparable<File> /* , Serializable */ {
 
