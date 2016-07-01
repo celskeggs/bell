@@ -1,9 +1,9 @@
-package com.celskeggs.support;
+package com.celskeggs.bell.support;
 
 import java.io.IOException;
 import java.io.SyncFailedException;
 
-import vm.VMSandbox;
+import com.celskeggs.bell.vm.VMSandbox;
 
 public class IOSystem {
 

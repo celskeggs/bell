@@ -1,4 +1,4 @@
-package com.celskeggs.net.protocols;
+package com.celskeggs.bell.net.protocols;
 
 public final class Protocols {
 	// TODO: implement http, https, file, and jar protocols.

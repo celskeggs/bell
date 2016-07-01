@@ -2,7 +2,7 @@ package java.lang.reflect;
 
 import java.util.Arrays;
 
-import com.celskeggs.support.IncompleteImplementationError;
+import com.celskeggs.bell.support.IncompleteImplementationError;
 
 public final class Constructor<T> extends Executable {
 	private final Class<T> parent;

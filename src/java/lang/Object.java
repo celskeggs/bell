@@ -1,6 +1,6 @@
 package java.lang;
 
-import com.celskeggs.support.IncompleteImplementationError;
+import com.celskeggs.bell.support.IncompleteImplementationError;
 
 public class Object {
 

@@ -1,6 +1,6 @@
 package java.lang;
 
-import vm.VMRuntime;
+import com.celskeggs.bell.vm.VMRuntime;
 
 public abstract class Runtime {
 

@@ -1,4 +1,4 @@
-package com.celskeggs.net.www;
+package com.celskeggs.bell.net.www;
 
 public class ContentTypes {
 	// TODO: implement some content types

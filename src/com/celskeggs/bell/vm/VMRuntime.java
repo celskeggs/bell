@@ -1,4 +1,4 @@
-package vm;
+package com.celskeggs.bell.vm;
 
 public class VMRuntime extends Runtime {
 

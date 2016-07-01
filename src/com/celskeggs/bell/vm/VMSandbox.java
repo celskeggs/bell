@@ -1,4 +1,4 @@
-package vm;
+package com.celskeggs.bell.vm;
 
 public class VMSandbox {
 	public static final int OP_PRINT_STDOUT = 0x1;

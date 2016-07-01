@@ -1,4 +1,4 @@
-package vm;
+package com.celskeggs.bell.vm;
 
 import java.io.IOException;
 import java.io.OutputStream;

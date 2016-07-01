@@ -2,7 +2,7 @@ package java.net;
 
 import java.io.IOException;
 
-import com.celskeggs.support.IncompleteImplementationError;
+import com.celskeggs.bell.support.IncompleteImplementationError;
 
 public abstract class URLStreamHandler {
 	protected abstract URLConnection openConnection(URL u) throws IOException;

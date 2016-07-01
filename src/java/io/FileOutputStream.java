@@ -1,6 +1,6 @@
 package java.io;
 
-import com.celskeggs.support.FileSystem;
+import com.celskeggs.bell.support.FileSystem;
 
 public class FileOutputStream extends OutputStream {
 

@@ -1,6 +1,6 @@
 package java.lang.reflect;
 
-import com.celskeggs.support.IncompleteImplementationError;
+import com.celskeggs.bell.support.IncompleteImplementationError;
 
 public final class Field extends AccessibleObject implements Member {
 	private final Class<?> parent;

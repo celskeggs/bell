@@ -5,7 +5,7 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
 
-import vm.VMNatives;
+import com.celskeggs.bell.vm.VMNatives;
 
 public class Throwable {
 	private final String message;

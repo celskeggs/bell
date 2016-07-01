@@ -1,8 +1,7 @@
 package java.lang;
 
-import com.celskeggs.support.IncompleteImplementationError;
-
-import vm.VMClass;
+import com.celskeggs.bell.support.IncompleteImplementationError;
+import com.celskeggs.bell.vm.VMClass;
 
 public final class Float extends Number {
 

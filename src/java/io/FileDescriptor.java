@@ -1,7 +1,7 @@
 package java.io;
 
-import com.celskeggs.support.FileImpl;
-import com.celskeggs.support.IOSystem;
+import com.celskeggs.bell.support.FileImpl;
+import com.celskeggs.bell.support.IOSystem;
 
 public final class FileDescriptor {
 	public static final FileDescriptor in = new FileDescriptor(IOSystem.in);

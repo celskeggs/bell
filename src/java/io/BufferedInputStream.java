@@ -1,6 +1,6 @@
 package java.io;
 
-import com.celskeggs.support.IncompleteImplementationError;
+import com.celskeggs.bell.support.IncompleteImplementationError;
 
 public class BufferedInputStream extends FilterInputStream {
 	protected volatile byte[] buf;

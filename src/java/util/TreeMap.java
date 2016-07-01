@@ -1,8 +1,8 @@
 package java.util;
 
-import com.celskeggs.support.IncompleteImplementationError;
-import com.celskeggs.support.ReverseNavigableMap;
-import com.celskeggs.support.SubsetNavigableMap;
+import com.celskeggs.bell.support.IncompleteImplementationError;
+import com.celskeggs.bell.support.ReverseNavigableMap;
+import com.celskeggs.bell.support.SubsetNavigableMap;
 
 // Unlike the Java SE implementation, this uses Splay Trees, not Red-Black Trees.
 // TODO: THIS NEEDS TESTING

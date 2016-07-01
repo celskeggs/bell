@@ -1,6 +1,6 @@
 package java.nio;
 
-import com.celskeggs.support.IncompleteImplementationError;
+import com.celskeggs.bell.support.IncompleteImplementationError;
 
 public abstract class ByteBuffer extends Buffer implements Comparable<ByteBuffer> {
 

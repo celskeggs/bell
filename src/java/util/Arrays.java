@@ -1,6 +1,6 @@
 package java.util;
 
-import com.celskeggs.support.CUtil;
+import com.celskeggs.bell.support.CUtil;
 
 public class Arrays {
 
@@ -54,6 +54,13 @@ public class Arrays {
 				}
 			}
 			return true;
+		}
+	}
+
+	public static void fill(byte[] data, int start, int end, byte b) {
+		// TODO: make this faster
+		for (int i = start; i < end; i++) {
+			data[i] = b;
 		}
 	}
 }

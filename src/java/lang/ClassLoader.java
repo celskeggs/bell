@@ -7,10 +7,9 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 
-import com.celskeggs.support.CUtil;
-import com.celskeggs.support.IncompleteImplementationError;
-
-import vm.VMAccess;
+import com.celskeggs.bell.support.CUtil;
+import com.celskeggs.bell.support.IncompleteImplementationError;
+import com.celskeggs.bell.vm.VMAccess;
 
 public abstract class ClassLoader {
 

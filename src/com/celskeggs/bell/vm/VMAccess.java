@@ -1,4 +1,4 @@
-package vm;
+package com.celskeggs.bell.vm;
 
 public class VMAccess {
 
@@ -9,7 +9,7 @@ public class VMAccess {
 	}
 
 	public static int getClassCount() {
-		return VMNatives.getCodeInt(VMDispatch.CLASS_TABLE_LENGTH_OFFSET);
+		return VMNatives.getCodeInt(VMFormat.CLASS_TABLE_LENGTH_OFFSET);
 	}
 
 	public static VMClass getVMClassByName(String className) {
@@ -28,7 +28,7 @@ public class VMAccess {
 
 	public static VMClass getVMClassByID(int id) {
 		if (VMAccess.globalClasses == null) {
-			VMAccess.globalClasses = new VMClass.Java[VMNatives.getCodeInt(VMDispatch.CLASS_TABLE_LENGTH_OFFSET)];
+			VMAccess.globalClasses = new VMClass.Java[VMNatives.getCodeInt(VMFormat.CLASS_TABLE_LENGTH_OFFSET)];
 		} else if (VMAccess.globalClasses[id] != null) {
 			return VMAccess.globalClasses[id];
 		}
@@ -38,7 +38,7 @@ public class VMAccess {
 	private static VMClass.Java[] globalClasses;
 
 	public static int getClassEntity(int classid) {
-		int clstab = VMNatives.getCodeInt(VMDispatch.CLASS_TABLE_POINTER_OFFSET);
+		int clstab = VMNatives.getCodeInt(VMFormat.CLASS_TABLE_POINTER_OFFSET);
 		return VMNatives.getCodeInt(clstab + 4 * classid);
 	}
 
@@ -51,15 +51,35 @@ public class VMAccess {
 	}
 
 	public static VMClass getSuperClass(int id) {
-		return VMAccess.getVMClassByID(VMNatives.getCodeInt(getClassEntity(id) + 24));
+		int sup = VMNatives.getCodeInt(getClassEntity(id) + 16);
+		// -1 means no superclass - root
+		return sup == -1 ? null : VMAccess.getVMClassByID(sup);
 	}
 
 	public static int getInterfaceCount(int id) {
-		return VMNatives.getCodeInt(getClassEntity(id) + 16);
+		return VMNatives.getCodeInt(getClassEntity(id) + 20);
 	}
 
 	public static int getInterfaceN(int id, int n) {
-		int iarray = VMNatives.getCodeInt(getClassEntity(id) + 20);
+		int iarray = VMNatives.getCodeInt(getClassEntity(id) + 24);
 		return VMNatives.getCodeInt(iarray + 4 * n);
+	}
+
+	public static int getMethodCount(int id) {
+		return VMNatives.getCodeInt(getClassEntity(id) + 28);
+	}
+
+	public static int getMethodOffset(int id) {
+		int marray = VMNatives.getCodeInt(getClassEntity(id) + 32);
+		return VMNatives.getCodeInt(marray + 4 * id);
+	}
+
+	public static int getFieldCount(int id) {
+		return VMNatives.getCodeInt(getClassEntity(id) + 36);
+	}
+
+	public static int getFieldOffset(int id) {
+		int farray = VMNatives.getCodeInt(getClassEntity(id) + 40);
+		return VMNatives.getCodeInt(farray + 4 * id);
 	}
 }

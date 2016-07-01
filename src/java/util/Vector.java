@@ -1,8 +1,8 @@
 package java.util;
 
-import com.celskeggs.support.CUtil;
-import com.celskeggs.support.EnumerationAdapter;
-import com.celskeggs.support.IncompleteImplementationError;
+import com.celskeggs.bell.support.CUtil;
+import com.celskeggs.bell.support.EnumerationAdapter;
+import com.celskeggs.bell.support.IncompleteImplementationError;
 
 public class Vector<E> extends AbstractList<E>
 		implements RandomAccess /* , Cloneable, Serializable */ {

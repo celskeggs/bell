@@ -1,6 +1,6 @@
 package java.util;
 
-import com.celskeggs.support.CUtil;
+import com.celskeggs.bell.support.CUtil;
 
 public class Collections {
 	// TODO: implement all of this

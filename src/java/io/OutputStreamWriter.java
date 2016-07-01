@@ -1,6 +1,6 @@
 package java.io;
 
-import vm.CharacterCoder;
+import com.celskeggs.bell.vm.CharacterCoder;
 
 public class OutputStreamWriter extends Writer {
 

@@ -1,6 +1,6 @@
 package java.lang;
 
-import vm.VMClass;
+import com.celskeggs.bell.vm.VMClass;
 
 public final class Byte extends Number {
 

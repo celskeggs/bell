@@ -1,11 +1,11 @@
-package vm;
+package com.celskeggs.bell.vm;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import com.celskeggs.support.IncompleteImplementationError;
+import com.celskeggs.bell.support.IncompleteImplementationError;
 
 public abstract class VMClass {
 	// TODO: find this somehow
@@ -233,17 +233,20 @@ public abstract class VMClass {
 			} else if (cls.isArray() || Modifier.isInterface(cls.getModifiers())) {
 				// TODO: check if this is correct behavior for interfaces
 				return "java/lang/Object".equals(getName());
-			} else if (this.isAssignableFrom(cls.getSuperClass())) {
-				return true;
 			} else {
-				int ic = cls.getInterfaceCount();
-				for (int i = 0; i < ic; i++) {
-					VMClass vmc = cls.getInterfaceN(i);
-					if (this.isAssignableFrom(vmc)) {
-						return true;
+				VMClass superClass = cls.getSuperClass();
+				if (superClass != null && this.isAssignableFrom(superClass)) {
+					return true;
+				} else {
+					int ic = cls.getInterfaceCount();
+					for (int i = 0; i < ic; i++) {
+						VMClass vmc = cls.getInterfaceN(i);
+						if (this.isAssignableFrom(vmc)) {
+							return true;
+						}
 					}
+					return false;
 				}
-				return false;
 			}
 		}
 

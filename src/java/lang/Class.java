@@ -9,11 +9,10 @@ import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
 
-import com.celskeggs.support.IncompleteImplementationError;
-
-import vm.VMAccess;
-import vm.VMClass;
-import vm.VMDispatch;
+import com.celskeggs.bell.support.IncompleteImplementationError;
+import com.celskeggs.bell.vm.VMAccess;
+import com.celskeggs.bell.vm.VMClass;
+import com.celskeggs.bell.vm.VMDispatch;
 
 public final class Class<T> /*
 							 * implements Serializable, GenericDeclaration,

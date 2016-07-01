@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.celskeggs.net.www.ContentTypes;
-import com.celskeggs.support.IncompleteImplementationError;
+import com.celskeggs.bell.net.www.ContentTypes;
+import com.celskeggs.bell.support.IncompleteImplementationError;
 
 public abstract class URLConnection {
 	protected URL url;

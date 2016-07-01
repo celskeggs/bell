@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
-import com.celskeggs.net.protocols.Protocols;
-import com.celskeggs.support.CUtil;
-import com.celskeggs.support.IncompleteImplementationError;
+import com.celskeggs.bell.net.protocols.Protocols;
+import com.celskeggs.bell.support.CUtil;
+import com.celskeggs.bell.support.IncompleteImplementationError;
 
 public final class URL /* implements Serializable */ {
 

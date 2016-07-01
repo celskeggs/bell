@@ -1,7 +1,7 @@
 package java.util;
 
-import com.celskeggs.support.ReverseNavigableSet;
-import com.celskeggs.support.SubsetNavigableSet;
+import com.celskeggs.bell.support.ReverseNavigableSet;
+import com.celskeggs.bell.support.SubsetNavigableSet;
 
 public class TreeSet<E> extends AbstractSet<E> implements NavigableSet<E>, Cloneable /* , Serializable */ {
 	private static final Object existSentinel = new Object();

@@ -3,7 +3,7 @@ package java.util;
 import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
 
-import com.celskeggs.support.IncompleteImplementationError;
+import com.celskeggs.bell.support.IncompleteImplementationError;
 
 public class BitSet /* implements Serializable, Clonable */ {
 
