@@ -5,14 +5,23 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 
 import com.celskeggs.bell.support.IncompleteImplementationError;
-import com.celskeggs.bell.vm.VMStandardOutputStream;
 
 public final class System {
 
 	public static final PrintStream out = new PrintStream(new FileOutputStream(FileDescriptor.out));
 	public static final PrintStream err = new PrintStream(new FileOutputStream(FileDescriptor.err));
 
-	public static native int identityHashCode(Object aThis);
+	private static int next_hashcode = 1;
+	
+	public static int identityHashCode(Object aThis) {
+		if (aThis.hashcode == 0) {
+			if (next_hashcode == 0) {
+				next_hashcode = 1;
+			}
+			aThis.hashcode = next_hashcode++;
+		}
+		return aThis.hashcode;
+	}
 
 	private System() {
 	}

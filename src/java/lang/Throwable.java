@@ -5,7 +5,11 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
 
+import com.celskeggs.bell.vm.StackFrame;
+import com.celskeggs.bell.vm.VMAccess;
 import com.celskeggs.bell.vm.VMNatives;
+import com.celskeggs.bell.vm.data.DatClass;
+import com.celskeggs.bell.vm.data.DatMethod;
 
 public class Throwable {
 	private final String message;
@@ -78,10 +82,20 @@ public class Throwable {
 			// not writable
 			return this;
 		}
-		trace = new StackTraceElement[VMNatives.getStackDepth()];
+		StackFrame here = VMNatives.getCurrentStackFrame();
+		int depth = 0;
+		for (StackFrame cur = here; cur != null; cur = cur.return_entry) {
+			depth++;
+		}
+		trace = new StackTraceElement[depth];
 		for (int i = 0; i < trace.length; i++) {
-			trace[i] = new StackTraceElement(VMNatives.getStackClass(i), VMNatives.getStackMethod(i),
-					VMNatives.getStackFile(i), VMNatives.getStackLine(i));
+			DatMethod m = here.method;
+			String class_name = VMAccess.getStringByDat(m.container.name).replace('/', '.');
+			String method_name = VMAccess.getStringByDat(m.method_name);
+			String file_name = null; // TODO
+			int line_number = -1; // TODO
+			trace[i] = new StackTraceElement(class_name, method_name, file_name, line_number);
+			here = here.return_entry;
 		}
 		return this;
 	}

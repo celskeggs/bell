@@ -6,11 +6,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import com.celskeggs.bell.support.IncompleteImplementationError;
+import com.celskeggs.bell.vm.data.DatClass;
+import com.celskeggs.bell.vm.data.DatMethod;
+import com.celskeggs.bell.vm.data.DatType;
 
 public abstract class VMClass {
-	// TODO: find this somehow
-	private static final int ALLOCATE_CLASS_FOR_VMCLASS_METHOD_ID = -1;
-
 	// TODO: do this
 	public static final VMClass BOOLEAN = null;
 	public static final VMClass BYTE = null;
@@ -29,7 +29,8 @@ public abstract class VMClass {
 
 	public Class<?> getRealClass() {
 		if (realClass == null) {
-			realClass = allocateClassForVMClass(this);
+			realClass = (Class<?>) VMNatives.intToObject(
+					VMAccess.invoke1(VMNatives.getRootSlab().classConstructor, VMNatives.objectToInt(this)));
 		}
 		return realClass;
 	}
@@ -177,12 +178,13 @@ public abstract class VMClass {
 	}
 
 	static final class Java extends VMClass {
-		private final int id;
+		private final DatClass cls;
 		private VMClass asArray;
 		private boolean initialized = false;
+		private DatMethod nullaryConstructor = null;
 
-		Java(int id) {
-			this.id = id;
+		Java(DatClass cls) {
+			this.cls = cls;
 		}
 
 		@Override
@@ -198,16 +200,37 @@ public abstract class VMClass {
 			return false;
 		}
 
+		private Object newRawInstance() {
+			Object chunk = VMNatives.allocateZeroedChunk(cls.instance_size);
+			VMNatives.writeObject(chunk, VMFormat.CHUNK_TYPE_OFFSET, this.cls);
+			return chunk;
+		}
+
+		private DatMethod getNullaryConstructor() {
+			// TODO: optimize so that this doesn't recheck every time for
+			// classes with no nullary constructor
+			if (this.nullaryConstructor == null) {
+				for (DatMethod method : cls.methods) {
+					if (method.parameter_types.length == 0 && method.return_type.isVoid()
+							&& "<init>".equals(VMAccess.getStringByDat(method.method_name))) {
+						this.nullaryConstructor = method;
+						break;
+					}
+				}
+			}
+			return this.nullaryConstructor;
+		}
+
 		public Object newInstance() throws InstantiationException {
 			this.ensureInitialized();
-			Object rawInstance = VMDispatch.rawNewObject(id);
-			int ncu = VMAccess.getNullConstructor(id);
-			if (ncu == 0) {
+			Object rawInstance = newRawInstance();
+			DatMethod ncu = getNullaryConstructor();
+			if (ncu == null) {
 				throw new InstantiationException("No nullary constructor!");
 			}
 			// TODO: check access
 			try {
-				VMNatives.call1(ncu, VMNatives.objectToID(rawInstance));
+				VMAccess.invoke1(ncu, VMNatives.objectToInt(rawInstance));
 			} catch (Throwable thr) {
 				throw new InstantiationException("Exception while instantiating class: " + thr);
 			}
@@ -216,7 +239,7 @@ public abstract class VMClass {
 
 		@Override
 		public String getName() {
-			return VMAccess.getVMClassName(id);
+			return VMAccess.getStringByDat(cls.name);
 		}
 
 		@Override
@@ -252,17 +275,17 @@ public abstract class VMClass {
 
 		@Override
 		public int getInterfaceCount() {
-			return VMAccess.getInterfaceCount(id);
+			return cls.interfaces.length;
 		}
 
 		@Override
 		public VMClass getInterfaceN(int i) {
-			return VMAccess.getVMClassByID(VMAccess.getInterfaceN(id, i));
+			return VMAccess.getVMClassByDatClass(cls.interfaces[i]);
 		}
 
 		@Override
 		public VMClass getSuperClass() {
-			return VMAccess.getSuperClass(id);
+			return VMAccess.getVMClassByDatClass(cls.super_class);
 		}
 
 		@Override
@@ -316,18 +339,13 @@ public abstract class VMClass {
 
 		@Override
 		public int getModifiers() {
-			return VMAccess.getVMClassFlags(id);
+			return cls.flags;
 		}
 
 		@Override
 		public ClassLoader getClassLoader() {
 			return null; // bootstrap class
 		}
-	}
-
-	private static Class<?> allocateClassForVMClass(VMClass id) {
-		return (Class<?>) VMNatives
-				.idToObject(VMNatives.call1(ALLOCATE_CLASS_FOR_VMCLASS_METHOD_ID, VMNatives.objectToID(id)));
 	}
 
 	public abstract String getDescriptor();
@@ -358,4 +376,19 @@ public abstract class VMClass {
 	public abstract int getModifiers();
 
 	public abstract ClassLoader getClassLoader();
+
+	public static VMClass vmClassOf(Object object) {
+		// TODO: avoid checked casting here
+		Object type = VMNatives.readObject(object, VMFormat.CHUNK_TYPE_OFFSET);
+		// could either be DatClass or DatType (for an array)
+		if (VMNatives.readObject(type, VMFormat.CHUNK_TYPE_OFFSET) == VMNatives.getRootSlab().datClassDatClass) {
+			return VMAccess.getVMClassByDatClass((DatClass) type);
+		} else {
+			return VMAccess.getVMClassByDatType((DatType) type);
+		}
+	}
+
+	public static Class<?> classOf(Object object) {
+		return vmClassOf(object).getRealClass();
+	}
 }

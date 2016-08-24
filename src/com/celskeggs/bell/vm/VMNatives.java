@@ -1,46 +1,58 @@
 package com.celskeggs.bell.vm;
 
+import com.celskeggs.bell.vm.data.DatSlab;
+
 public class VMNatives {
 
-	public static native int call0(int cid);
-
-	public static native int call1(int cid, int argument1);
-
-	public static native byte getCodeByte(int ptr);
-
-	public static native short getCodeShort(int ptr);
-
-	public static native int getCodeInt(int ptr);
-
-	public static native long getCodeLong(int ptr);
-
-	public static native Object idToObject(int id);
-
-	public static native int objectToID(Object obj);
-
-	public static float getCodeFloat(int ptr) {
-		return Float.intBitsToFloat(getCodeInt(ptr));
+	public static DatSlab getRootSlab() {
+		return (DatSlab) intToObject(VMFormat.SERIALIZED_SLAB_OFFSET);
 	}
 
-	public static double getCodeDouble(int ptr) {
-		return Double.longBitsToDouble(getCodeLong(ptr));
+	// object at (relative) address zero is NULL
+
+	static native Object intToObject(int obj);
+
+	static native int objectToInt(Object obj);
+
+	private static native int readInt0(int offset);
+
+	private static native void writeInt0(int offset, int value);
+
+	private static native int allocateZeroedChunkRaw(int size);
+
+	public static native StackFrame getCurrentStackFrame();
+
+	// also updates the return address in the previous current stack frame to the return address of this method
+	public static native void setCurrentStackFrame(StackFrame frame);
+
+	// size will be rounded up to the nearest 4 byte boundary.
+	public static Object allocateZeroedChunk(int size) {
+		return intToObject(allocateZeroedChunkRaw(size));
 	}
 
-	public static boolean getCodeBoolean(int ptr) {
-		return getCodeByte(ptr) != 0;
+	public static int readLength(Object chunk) {
+		return readInt0(objectToInt(chunk) + VMFormat.CHUNK_LENGTH_OFFSET);
 	}
 
-	public static native Object allocateStructure(int classEntity);
+	public static int readInt(Object chunk, int offset) {
+		if (offset < 0 || offset >= readLength(chunk)) {
+			throw new IllegalArgumentException();
+		}
+		return readInt0(objectToInt(chunk) + offset);
+	}
 
-	public static native Object allocateChunk(int size);
+	public static void writeInt(Object chunk, int offset, int value) {
+		if (offset < 0 || offset >= readLength(chunk)) {
+			throw new IllegalArgumentException();
+		}
+		writeInt0(objectToInt(chunk) + offset, value);
+	}
 
-	public static native int getStackDepth();
+	public static Object readObject(Object chunk, int offset) {
+		return intToObject(readInt(chunk, offset));
+	}
 
-	public static native String getStackClass(int i);
-
-	public static native String getStackMethod(int i);
-
-	public static native String getStackFile(int i);
-
-	public static native int getStackLine(int i);
+	public static void writeObject(Object chunk, int offset, Object value) {
+		writeInt(chunk, offset, objectToInt(value));
+	}
 }

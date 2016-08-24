@@ -1,85 +1,91 @@
 package com.celskeggs.bell.vm;
 
+import com.celskeggs.bell.vm.data.DatClass;
+import com.celskeggs.bell.vm.data.DatMethod;
+import com.celskeggs.bell.vm.data.DatString;
+import com.celskeggs.bell.vm.data.DatType;
+
 public class VMAccess {
 
-	// TODO: should this exist?
-	public static Class getClassByName(String className) {
+	public static Class<?> getClassByName(String className) {
 		VMClass vmc = getVMClassByName(className);
 		return vmc == null ? null : vmc.getRealClass();
 	}
 
-	public static int getClassCount() {
-		return VMNatives.getCodeInt(VMFormat.CLASS_TABLE_LENGTH_OFFSET);
-	}
-
 	public static VMClass getVMClassByName(String className) {
-		int count = getClassCount();
-		for (int i = 0; i < count; i++) {
-			if (className.equals(getVMClassName(i))) {
-				return getVMClassByID(i);
+		for (DatClass cls : VMNatives.getRootSlab().datclasses) {
+			if (className.equals(getStringByDat(cls.name))) {
+				return getVMClassByDatClass(cls);
 			}
 		}
 		return null;
 	}
-
-	public static String getVMClassName(int vmid) {
-		return VMDispatch.getStringByID(VMNatives.getCodeInt(getClassEntity(vmid) + 4));
-	}
-
-	public static VMClass getVMClassByID(int id) {
-		if (VMAccess.globalClasses == null) {
-			VMAccess.globalClasses = new VMClass.Java[VMNatives.getCodeInt(VMFormat.CLASS_TABLE_LENGTH_OFFSET)];
-		} else if (VMAccess.globalClasses[id] != null) {
-			return VMAccess.globalClasses[id];
+	
+	public static String getStringByDat(DatString str) {
+		String s = str.assoc;
+		if (s != null) {
+			return s;
 		}
-		return VMAccess.globalClasses[id] = new VMClass.Java(id);
+		return str.assoc = new String(str.data);
 	}
 
-	private static VMClass.Java[] globalClasses;
-
-	public static int getClassEntity(int classid) {
-		int clstab = VMNatives.getCodeInt(VMFormat.CLASS_TABLE_POINTER_OFFSET);
-		return VMNatives.getCodeInt(clstab + 4 * classid);
+	public static VMClass getVMClassByDatClass(DatClass cls) {
+		if (cls == null) {
+			return null;
+		}
+		Object o = cls.assoc_rep;
+		if (o != null) {
+			return (VMClass) o;
+		}
+		VMClass vmcn = new VMClass.Java(cls);
+		cls.assoc_rep = vmcn;
+		return vmcn;
 	}
 
-	public static int getNullConstructor(int id) {
-		return VMNatives.getCodeInt(getClassEntity(id) + 8);
+	public static VMClass getVMClassByDatType(DatType cls) {
+		if (cls == null) {
+			return null;
+		}
+		Object o = cls.assoc_rep;
+		if (o != null) {
+			return (VMClass) o;
+		}
+		switch (cls.tag) {
+		case DatType.TAG_ARRAY:
+			return getVMClassByDatType(cls.inner_type).getArrayOf();
+		case DatType.TAG_CLASS:
+			return getVMClassByDatClass(cls.class_ref);
+		case DatType.TAG_BOOLEAN:
+			return VMClass.BOOLEAN;
+		case DatType.TAG_BYTE:
+			return VMClass.BYTE;
+		case DatType.TAG_CHAR:
+			return VMClass.CHAR;
+		case DatType.TAG_SHORT:
+			return VMClass.SHORT;
+		case DatType.TAG_INT:
+			return VMClass.INT;
+		case DatType.TAG_FLOAT:
+			return VMClass.FLOAT;
+		case DatType.TAG_LONG:
+			return VMClass.LONG;
+		case DatType.TAG_DOUBLE:
+			return VMClass.DOUBLE;
+		case DatType.TAG_VOID:
+			return VMClass.VOID;
+		default:
+			throw new RuntimeException("Unknown DatType tag: " + cls.tag);
+		}
 	}
 
-	public static int getVMClassFlags(int id) {
-		return VMNatives.getCodeInt(getClassEntity(id) + 12);
-	}
-
-	public static VMClass getSuperClass(int id) {
-		int sup = VMNatives.getCodeInt(getClassEntity(id) + 16);
-		// -1 means no superclass - root
-		return sup == -1 ? null : VMAccess.getVMClassByID(sup);
-	}
-
-	public static int getInterfaceCount(int id) {
-		return VMNatives.getCodeInt(getClassEntity(id) + 20);
-	}
-
-	public static int getInterfaceN(int id, int n) {
-		int iarray = VMNatives.getCodeInt(getClassEntity(id) + 24);
-		return VMNatives.getCodeInt(iarray + 4 * n);
-	}
-
-	public static int getMethodCount(int id) {
-		return VMNatives.getCodeInt(getClassEntity(id) + 28);
-	}
-
-	public static int getMethodOffset(int id) {
-		int marray = VMNatives.getCodeInt(getClassEntity(id) + 32);
-		return VMNatives.getCodeInt(marray + 4 * id);
-	}
-
-	public static int getFieldCount(int id) {
-		return VMNatives.getCodeInt(getClassEntity(id) + 36);
-	}
-
-	public static int getFieldOffset(int id) {
-		int farray = VMNatives.getCodeInt(getClassEntity(id) + 40);
-		return VMNatives.getCodeInt(farray + 4 * id);
+	public static int invoke1(DatMethod nc, int param) {
+		StackFrame frame = new StackFrame();
+		frame.return_entry = VMNatives.getCurrentStackFrame();
+		frame.locals = new int[nc.implementation_var_count];
+		frame.locals[0] = param;
+		// get contents of the byte array
+		frame.next_address = VMNatives.objectToInt(nc.implementation_code) + VMFormat.CHUNK_FIRST_FIELD_OFFSET;
+		VMNatives.setCurrentStackFrame(frame);
+		return frame.return_value_low;
 	}
 }

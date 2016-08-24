@@ -3,16 +3,13 @@ package java.lang;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
 
 import com.celskeggs.bell.support.IncompleteImplementationError;
-import com.celskeggs.bell.vm.VMAccess;
 import com.celskeggs.bell.vm.VMClass;
-import com.celskeggs.bell.vm.VMDispatch;
 
 public final class Class<T> /*
 							 * implements Serializable, GenericDeclaration,
@@ -21,8 +18,11 @@ public final class Class<T> /*
 
 	private final VMClass cls;
 
-	// Referenced indirectly by VMClass
+	// Referenced by com.celskeggs.bell.vm.VMNatives.callClassConstructor(VMClass)
 	private Class(VMClass cls) {
+		if (cls == null) {
+			throw new NullPointerException();
+		}
 		this.cls = cls;
 	}
 

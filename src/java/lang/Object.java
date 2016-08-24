@@ -1,18 +1,19 @@
 package java.lang;
 
 import com.celskeggs.bell.support.IncompleteImplementationError;
+import com.celskeggs.bell.vm.VMClass;
 
 public class Object {
-
-	int classpointer; // required to be here by C code
-	int gcpointer;
+	
 	int hashcode;
 
 	// Any initalizer will not be called for arrays!
 	public Object() {
 	}
 
-	public final native Class<?> getClass();
+	public final Class<?> getClass() {
+		return VMClass.classOf(this);
+	}
 
 	public int hashCode() {
 		return System.identityHashCode(this);

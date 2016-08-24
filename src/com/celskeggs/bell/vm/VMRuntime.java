@@ -1,16 +1,26 @@
 package com.celskeggs.bell.vm;
 
+import com.celskeggs.bell.support.IncompleteImplementationError;
+
 public class VMRuntime extends Runtime {
 
 	@Override
-	public native void exit(int status);
+	public void exit(int status) {
+		throw new IncompleteImplementationError();
+	}
 
 	@Override
-	public native long freeMemory();
+	public long freeMemory() {
+		throw new IncompleteImplementationError();
+	}
 
 	@Override
-	public native long totalMemory();
+	public long totalMemory() {
+		throw new IncompleteImplementationError();
+	}
 
 	@Override
-	public native void gc();
+	public void gc() {
+		throw new IncompleteImplementationError();
+	}
 }
