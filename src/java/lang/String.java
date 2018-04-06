@@ -255,6 +255,10 @@ public final class String implements CharSequence {
 		return -1;
 	}
 
+    public boolean contains(String str) {
+        return indexOf(str) != -1;
+    }
+
 	public int lastIndexOf(String str) {
 		return lastIndexOf(str, data.length - str.length());
 	}
@@ -313,6 +317,23 @@ public final class String implements CharSequence {
 			return new String(narr, true);
 		}
 	}
+
+    public String replace(CharSequence targetCS, CharSequence replacementCS) {
+        String target = targetCS.toString();
+        String replacement = replacementCS.toString();
+        StringBuilder result = new StringBuilder(this);
+        for (int i = 0, j = 0; i < this.length();) {
+            if (this.startsWith(target, i)) {
+                result.replace(j, j + target.length(), replacement);
+                i += target.length();
+                j += replacement.length();
+            } else {
+                i++;
+                j++;
+            }
+        }
+        return result.toString();
+    }
 
 	public String toLowerCase() {
 		boolean found = false;

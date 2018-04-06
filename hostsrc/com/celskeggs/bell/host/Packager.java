@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
-import org.apache.bcel.Constants;
+import org.apache.bcel.Const;
 import org.apache.bcel.classfile.ClassFormatException;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.Code;
@@ -18,7 +18,6 @@ import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.ConstantValue;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.classfile.LineNumber;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ArrayType;
 import org.apache.bcel.generic.ObjectType;
@@ -49,6 +48,26 @@ public class Packager {
 
 		public void clear() {
 			throw new UnsupportedOperationException();
+		}
+		
+		public void removeClass(JavaClass clazz) {
+            throw new UnsupportedOperationException();
+		}
+		
+		public org.apache.bcel.util.ClassPath getClassPath() {
+            throw new UnsupportedOperationException();
+		}
+		
+		public JavaClass findClass(String className) {
+            throw new UnsupportedOperationException();
+		}
+		
+		public JavaClass loadClass(Class<?> clazz) throws ClassNotFoundException {
+            throw new UnsupportedOperationException();
+		}
+		
+		public void storeClass(JavaClass clazz) {
+            throw new UnsupportedOperationException();
 		}
 	};
 
@@ -139,39 +158,39 @@ public class Packager {
 	private DatType getDatType(Type t) throws ClassNotFoundException {
 		DatType dt = new DatType();
 		switch (t.getType()) {
-		case Constants.T_ARRAY:
+		case Const.T_ARRAY:
 			dt.tag = DatType.TAG_ARRAY;
 			dt.inner_type = getDatType(((ArrayType) t).getElementType());
 			break;
-		case Constants.T_OBJECT:
+		case Const.T_OBJECT:
 			dt.tag = DatType.TAG_CLASS;
 			dt.class_ref = getClass(((ObjectType) t).getClassName()).dc;
 			break;
-		case Constants.T_BOOLEAN:
+		case Const.T_BOOLEAN:
 			dt.tag = DatType.TAG_BOOLEAN;
 			break;
-		case Constants.T_BYTE:
+		case Const.T_BYTE:
 			dt.tag = DatType.TAG_BYTE;
 			break;
-		case Constants.T_CHAR:
+		case Const.T_CHAR:
 			dt.tag = DatType.TAG_CHAR;
 			break;
-		case Constants.T_DOUBLE:
+		case Const.T_DOUBLE:
 			dt.tag = DatType.TAG_DOUBLE;
 			break;
-		case Constants.T_FLOAT:
+		case Const.T_FLOAT:
 			dt.tag = DatType.TAG_FLOAT;
 			break;
-		case Constants.T_INT:
+		case Const.T_INT:
 			dt.tag = DatType.TAG_INT;
 			break;
-		case Constants.T_LONG:
+		case Const.T_LONG:
 			dt.tag = DatType.TAG_LONG;
 			break;
-		case Constants.T_SHORT:
+		case Const.T_SHORT:
 			dt.tag = DatType.TAG_SHORT;
 			break;
-		case Constants.T_VOID:
+		case Const.T_VOID:
 			dt.tag = DatType.TAG_VOID;
 			break;
 		default:
@@ -262,36 +281,36 @@ public class Packager {
 			df.has_constant_value = true;
 			Constant c = cv.getConstantPool().getConstant(cv.getConstantValueIndex());
 			switch (c.getTag()) {
-			case Constants.CONSTANT_Long:
+			case Const.CONSTANT_Long:
 				if (dt.tag != DatType.TAG_LONG) {
 					throw new RuntimeException("Type mismatch!");
 				}
 				df.constant_value = ((ConstantLong) c).getBytes();
 				break;
-			case Constants.CONSTANT_Float:
+			case Const.CONSTANT_Float:
 				if (dt.tag != DatType.TAG_FLOAT) {
 					throw new RuntimeException("Type mismatch!");
 				}
 				df.constant_value = Float.floatToIntBits(((ConstantFloat) c).getBytes());
 				break;
-			case Constants.CONSTANT_Double:
+			case Const.CONSTANT_Double:
 				if (dt.tag != DatType.TAG_DOUBLE) {
 					throw new RuntimeException("Type mismatch!");
 				}
 				df.constant_value = Double.doubleToLongBits(((ConstantDouble) c).getBytes());
 				break;
-			case Constants.CONSTANT_Integer:
+			case Const.CONSTANT_Integer:
 				if (dt.tag != DatType.TAG_INT) {
 					throw new RuntimeException("Type mismatch!");
 				}
 				df.constant_value = ((ConstantInteger) c).getBytes();
 				break;
-			case Constants.CONSTANT_String:
+			case Const.CONSTANT_String:
 				if (dt.tag != DatType.TAG_CLASS) { // TODO: check more closely?
 					throw new RuntimeException("Type mismatch!");
 				}
 				int i = ((ConstantString) c).getStringIndex();
-				c = cv.getConstantPool().getConstant(i, Constants.CONSTANT_Utf8);
+				c = cv.getConstantPool().getConstant(i, Const.CONSTANT_Utf8);
 				df.constant_string = getString(((ConstantUtf8) c).getBytes());
 				break;
 			default:

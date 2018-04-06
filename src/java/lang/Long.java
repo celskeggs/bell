@@ -55,6 +55,10 @@ public final class Long extends Number {
 		return toString(l, 10);
 	}
 
+    public static Long valueOf(long l) {
+        return new Long(l);
+    }
+
 	public String toString() {
 		return toString(value);
 	}

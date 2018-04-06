@@ -118,6 +118,10 @@ public final class Integer extends Number {
 		return new Integer(parseInt(s));
 	}
 
+    public static Integer valueOf(int i) {
+        return new Integer(i);
+    }
+
 	public int intValue() {
 		return value;
 	}
@@ -155,4 +159,17 @@ public final class Integer extends Number {
 			return 0;
 		}
 	}
+
+    public static Integer getInteger(String string, int i) {
+        String value = System.getProperty(string);
+        if (value == null) {
+            return i;
+        } else {
+            try {
+                return parseInt(value);
+            } catch (NumberFormatException ex) {
+                return i;
+            }
+        }
+    }
 }

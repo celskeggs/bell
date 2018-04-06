@@ -20,4 +20,6 @@ public abstract class Runtime {
 	public abstract long totalMemory();
 
 	public abstract void gc();
+
+    public abstract void addShutdownHook(Thread thread);
 }

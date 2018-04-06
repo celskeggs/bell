@@ -1,5 +1,7 @@
 package java.util;
 
+import org.apache.bcel.classfile.AnnotationEntry;
+
 import com.celskeggs.bell.support.CUtil;
 
 public class Collections {
@@ -664,4 +666,12 @@ public class Collections {
 			}
 		};
 	}
+
+    public static <E> boolean addAll(Collection<? super E> c, E... elements) {
+        boolean changed = false;
+        for (E element : elements) {
+            changed |= c.add(element);
+        }
+        return changed;
+    }
 }

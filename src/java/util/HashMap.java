@@ -4,21 +4,35 @@ import com.celskeggs.bell.support.IncompleteImplementationError;
 
 public class HashMap<K, V> extends AbstractMap<K, V> {
 
-	private static final class LinkedEntry<K, V> extends SimpleEntry<K, V> {
+	static class LinkedEntry<K, V> extends SimpleEntry<K, V> {
 		public LinkedEntry<K, V> next;
 
 		public LinkedEntry(K key, V value, LinkedEntry<K, V> next) {
 			super(key, value);
 			this.next = next;
 		}
+        
+        void insertAtEnd() {
+            // do nothing unless it's a LinkedHashMap
+        }
+        
+        void removeFromLinks() {
+            // do nothing unless it's a LinkedHashMap
+        }
+	}
+	
+	Iterator<Map.Entry<K, V>> entryIterator() {
+	    return new EntryIterator();
 	}
 
 	private final class SetView extends AbstractSet<Map.Entry<K, V>> {
-		public Iterator<Map.Entry<K, V>> iterator() {
-			return new EntryIterator();
+		@Override
+        public Iterator<Map.Entry<K, V>> iterator() {
+			return entryIterator();
 		}
 
-		public int size() {
+		@Override
+        public int size() {
 			return count;
 		}
 	}
@@ -29,7 +43,8 @@ public class HashMap<K, V> extends AbstractMap<K, V> {
 		private K keyRemove;
 		private LinkedEntry<K, V> cur = null;
 
-		public boolean hasNext() {
+		@Override
+        public boolean hasNext() {
 			while (cur == null) {
 				if (index >= entries.length) {
 					return false;
@@ -39,7 +54,8 @@ public class HashMap<K, V> extends AbstractMap<K, V> {
 			return true;
 		}
 
-		public Map.Entry<K, V> next() {
+		@Override
+        public Map.Entry<K, V> next() {
 			if (!hasNext()) {
 				throw new NoSuchElementException();
 			}
@@ -50,25 +66,14 @@ public class HashMap<K, V> extends AbstractMap<K, V> {
 			return out;
 		}
 
-		public void remove() {
+		@Override
+        public void remove() {
 			if (!canRemove) {
 				throw new IllegalStateException();
 			}
 			canRemove = false;
-			int target = bucketFor(keyRemove);
-			LinkedEntry<K, V> ent = entries[target];
-			LinkedEntry<K, V> last = null;
-			while (!Objects.equals(ent.getKey(), keyRemove)) {
-				last = ent;
-				ent = last.next;
-				if (ent == null) {
-					throw new ConcurrentModificationException();
-				}
-			}
-			if (last == null) {
-				entries[target] = ent.next;
-			} else {
-				last.next = ent.next;
+			if (removeEntryFor(keyRemove) == null) {
+                throw new ConcurrentModificationException();
 			}
 			keyRemove = null;
 		}
@@ -100,7 +105,8 @@ public class HashMap<K, V> extends AbstractMap<K, V> {
 		putAll(m);
 	}
 
-	public int size() {
+	@Override
+    public int size() {
 		return count;
 	}
 
@@ -108,7 +114,7 @@ public class HashMap<K, V> extends AbstractMap<K, V> {
 		return Math.abs(Objects.hashCode(key)) % entries.length;
 	}
 
-	private LinkedEntry<K, V> entryFor(Object key) {
+	LinkedEntry<K, V> entryFor(Object key) {
 		LinkedEntry<K, V> ent = entries[bucketFor(key)];
 		while (ent != null) {
 			if (Objects.equals(ent.getKey(), key)) {
@@ -119,17 +125,19 @@ public class HashMap<K, V> extends AbstractMap<K, V> {
 		return null;
 	}
 
-	private LinkedEntry<K, V> removeEntryFor(Object key) {
+	LinkedEntry<K, V> removeEntryFor(Object key) {
 		int bucket = bucketFor(key);
 		LinkedEntry<K, V> ent = entries[bucket];
 		LinkedEntry<K, V> last = null;
 		while (ent != null) {
-			if (ent.getKey().equals(key)) {
+			if (Objects.equals(ent.getKey(), key)) {
 				if (last == null) {
 					entries[bucket] = ent.next;
 				} else {
 					last.next = ent.next;
 				}
+                ent.removeFromLinks();
+                count--;
 				return ent;
 			}
 			last = ent;
@@ -138,9 +146,15 @@ public class HashMap<K, V> extends AbstractMap<K, V> {
 		return null;
 	}
 
-	private void insertEntryFor(K key, V value) {
+	LinkedEntry<K, V> newLinkedEntry(K key, V value, LinkedEntry<K, V> next) {
+	    return new LinkedEntry<K, V>(key, value, next);
+	}
+
+	void insertEntryFor(K key, V value) {
 		int bucket = bucketFor(key);
-		entries[bucket] = new LinkedEntry<K, V>(key, value, entries[bucket]);
+		entries[bucket] = newLinkedEntry(key, value, entries[bucket]);
+		entries[bucket].insertAtEnd();
+        count++;
 	}
 
 	void increaseCapacity(int size) {
@@ -161,16 +175,19 @@ public class HashMap<K, V> extends AbstractMap<K, V> {
 		return entries.length;
 	}
 
-	public V get(Object key) {
+	@Override
+    public V get(Object key) {
 		LinkedEntry<K, V> ent = entryFor(key);
 		return ent == null ? null : ent.getValue();
 	}
 
-	public boolean containsKey(Object key) {
+	@Override
+    public boolean containsKey(Object key) {
 		return entryFor(key) != null;
 	}
 
-	public V put(K key, V value) {
+	@Override
+    public V put(K key, V value) {
 		LinkedEntry<K, V> ent = entryFor(key);
 		if (ent != null) {
 			return ent.setValue(value);
@@ -179,11 +196,11 @@ public class HashMap<K, V> extends AbstractMap<K, V> {
 			increaseCapacity(entries.length * 2);
 		}
 		insertEntryFor(key, value);
-		count++;
 		return null;
 	}
 
-	public void putAll(Map<? extends K, ? extends V> m) {
+	@Override
+    public void putAll(Map<? extends K, ? extends V> m) {
 		int n = entries.length, expected = m.size();
 		while (count + expected > loadFactor * n) {
 			n *= 2;
@@ -197,29 +214,30 @@ public class HashMap<K, V> extends AbstractMap<K, V> {
 				mine.setValue(ent.getValue());
 			} else {
 				insertEntryFor(ent.getKey(), ent.getValue());
-				count++;
 			}
 		}
 	}
 
-	public V remove(Object key) {
+	@Override
+    public V remove(Object key) {
 		LinkedEntry<K, V> ent = removeEntryFor(key);
 		if (ent == null) {
 			return null;
 		} else {
-			count--;
 			return ent.getValue();
 		}
 	}
 
-	public void clear() {
+	@Override
+    public void clear() {
 		for (int i = 0; i < entries.length; i++) {
 			entries[i] = null;
 		}
 		count = 0;
 	}
 
-	public boolean containsValue(Object value) {
+	@Override
+    public boolean containsValue(Object value) {
 		for (LinkedEntry<K, V> ent : entries) {
 			do {
 				if (Objects.equals(value, ent.getValue())) {
@@ -231,11 +249,13 @@ public class HashMap<K, V> extends AbstractMap<K, V> {
 		return false;
 	}
 
-	public Object clone() {
+	@Override
+    public Object clone() {
 		throw new IncompleteImplementationError();
 	}
 
-	public Set<Map.Entry<K, V>> entrySet() {
+	@Override
+    public Set<Map.Entry<K, V>> entrySet() {
 		if (setView == null) {
 			setView = new SetView();
 		}

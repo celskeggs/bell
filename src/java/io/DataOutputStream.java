@@ -1,6 +1,6 @@
 package java.io;
 
-public class DataOutputStream extends FilterOutputStream implements DataOutput {
+public class DataOutputStream extends FilterOutputStream implements DataOutput, AutoCloseable {
 	protected int written = 0;
 
 	public DataOutputStream(OutputStream out) {

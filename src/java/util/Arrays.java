@@ -1,6 +1,9 @@
 package java.util;
 
+import org.apache.bcel.generic.LocalVariableGen;
+
 import com.celskeggs.bell.support.CUtil;
+import com.celskeggs.bell.support.IncompleteImplementationError;
 
 public class Arrays {
 
@@ -63,4 +66,67 @@ public class Arrays {
 			data[i] = b;
 		}
 	}
+
+    public static <E> List<E> asList(final E[] a) {
+        return new AbstractList<E>() {
+            @Override public E get(int index) {
+                return a[index];
+            }
+
+            @Override public int size() {
+                return a.length;
+            }
+        };
+    }
+
+    public static String toString(int[] a) {
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < a.length; i++) {
+            if (i != 0) {
+                sb.append(", ");
+            }
+            sb.append(a[i]);
+        }
+        return sb.append("]").toString();
+    }
+    
+    private static <T> void merge(T[] arr, int start, int boundary, int end, T[] scratch, Comparator<? super T> comparator) {
+        System.arraycopy(arr, start, scratch, start, end - start);
+        int sourceA = start, sourceB = boundary;
+        int output = start;
+        while (sourceA < boundary && sourceB < end) {
+            if (comparator.compare(scratch[sourceA], scratch[sourceB]) <= 0) {
+                // use left
+                arr[output++] = scratch[sourceA++];
+            } else {
+                // use right
+                arr[output++] = scratch[sourceB++];
+            }
+        }
+        while (sourceA < boundary) {
+            arr[output++] = scratch[sourceA++];
+        }
+        while (sourceB < end) {
+            arr[output++] = scratch[sourceB++];
+        }
+        if (output != end) {
+            throw new RuntimeException("internal sort error");
+        }
+    }
+    
+    private static <T> void sort(T[] arr, int start, int end, T[] scratch, Comparator<? super T> comparator) {
+        if (end - start <= 1) {
+            return;
+        }
+        int boundary = start / 2 + end / 2 + (start % 2 + end % 2) / 2;
+        sort(arr, start, boundary, scratch, comparator);
+        sort(arr, boundary, end, scratch, comparator);
+        merge(arr, start, boundary, end, scratch, comparator);
+    }
+
+    // TODO: ensure this is stable
+    public static <T> void sort(T[] arr, Comparator<? super T> comparator) {
+        T[] scratch = (T[]) new Object[arr.length];
+        sort(arr, 0, arr.length, scratch, comparator);
+    }
 }

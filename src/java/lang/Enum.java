@@ -38,7 +38,8 @@ public abstract class Enum<E extends Enum<E>>
 	}
 
 	public int compareTo(E o) {
-		return ordinal - o.ordinal;
+	    Enum<E> oe = o;
+		return ordinal - oe.ordinal;
 	}
 
 	public final Class<E> getDeclaringClass() {

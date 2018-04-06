@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" output="specbin" path="src"/>
-	<classpathentry kind="src" path="bcel-5.2/src/java"/>
 	<classpathentry kind="src" path="hostsrc"/>
+	<classpathentry kind="src" path="bcel-6.2-src/src/main/java"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

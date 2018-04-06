@@ -23,4 +23,9 @@ public class VMRuntime extends Runtime {
 	public void gc() {
 		throw new IncompleteImplementationError();
 	}
+
+    @Override
+    public void addShutdownHook(Thread thread) {
+        throw new IncompleteImplementationError();
+    }
 }

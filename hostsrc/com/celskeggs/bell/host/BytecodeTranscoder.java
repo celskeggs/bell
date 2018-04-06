@@ -3,7 +3,9 @@ package com.celskeggs.bell.host;
 import org.apache.bcel.classfile.Code;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.InstructionList;
+import org.apache.bcel.generic.InstructionHandle;
 
+import com.celskeggs.bell.support.IncompleteImplementationError;
 import com.celskeggs.bell.vm.data.DatMethod;
 
 public class BytecodeTranscoder {
@@ -21,6 +23,7 @@ public class BytecodeTranscoder {
 	public void transcode(Code c) {
 		dm.implementation_var_count = c.getMaxStack() + c.getMaxLocals();
 		InstructionList il = new InstructionList(c.getCode());
-		InstructionHandler[] handles = il.getInstructionHandles();
+		InstructionHandle[] handles = il.getInstructionHandles();
+		throw new IncompleteImplementationError();
 	}
 }
