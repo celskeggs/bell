@@ -8,6 +8,8 @@ import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
 
+import org.apache.bcel.classfile.Attribute;
+
 import com.celskeggs.bell.support.IncompleteImplementationError;
 import com.celskeggs.bell.vm.VMClass;
 
@@ -399,4 +401,8 @@ public final class Class<T> /*
 			throw new ClassCastException();
 		}
 	}
+
+    public Package getPackage() {
+        throw new IncompleteImplementationError();
+    }
 }
